@@ -539,11 +539,13 @@ void initBerResultStructGP_HammingEncoder (GP_HammingEncoderStruct *GP_HammingEn
   //pushBerResultField(berResult,"numberOfCalls","long unsigned int","%13lu",&GP_HammingEncoder->numberOfCalls);
 }
 
+
+
 void HammingEncoder(GP_HammingEncoderStruct *GP_HammingEncoder, int N_parity, int N_input, int N_output,  uint8_t *input, uint8_t *output){
   //Calculate parity position
   //placed in 2^n for non-systematic
   int i,j, position[N_parity];
-  int generated_matrix[N_input][N_output];
+  int generated_matrix[N_input][N_output]; //[r][c]
   
   for(i=0; i<N_parity; i++)
     {
@@ -552,21 +554,43 @@ void HammingEncoder(GP_HammingEncoderStruct *GP_HammingEncoder, int N_parity, in
       position[i]=pos; //storing parity position in array
     }
   //debug: checking if parity position is stored in array
-  /* for(j=0; j<N_parity;j++)
+   for(j=0; j<N_parity;j++)
     {
       printf("\nElement[%d]: %d\n",j,position[j]);
     }
-  */
   
+  int data = 0; //data index
   //constructing generated matrix
-  for(i=0;i<N_input;i++) //row
+  for(i=0;i<N_output;i++) //column
     {
-      for(j=0;j<N_output;j++) //column
+      //problem below is put position[i]
+      if(i!=position[i]) //if not parity position
 	{
-	  
+	   for(j=0;j<N_input;j++) //row
+	     {
+	       if(data==j) 
+		 {
+		   generated_matrix[i][data]=1;
+		 }
+	       else
+		 {
+		   generated_matrix[i][data]=0;
+		   
+		 }
+	      
+	     }
+	
 	}
+     
+      data++;
     }
-}
+  printf("\n\nG:\n\n");
+  /* for(i=0;i<N_input;i++){
+    for(j=0;j<N_output;j++){
+      printf("%d",generated_matrix[i][j]);
+    }
+    }*/
+}//end fx
 
 
 // Finally when everything is in place, the module must be
