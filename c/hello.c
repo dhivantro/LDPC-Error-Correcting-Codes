@@ -4,7 +4,8 @@
 
 
 int i, j, k;
- 
+
+/*
 int main(){
   int N=7, K=4;
 
@@ -36,13 +37,13 @@ int disp[2][4] = {
  
 for(i=0; i<K; i++) {
       for(j=0;j<N;j++) {
-         printf("%d ", G[i][j]);
+        // printf("%d ", G[i][j]);
          if(j==N-1){
-            printf("\n");
+	   //   printf("\n");
          }
        }
    }
-
+ 
 
 //
  //for(i=0; i<4; i++) //message bits
@@ -64,17 +65,22 @@ for(i=0; i<K; i++) {
     
 
 
- printf("\nCode word:\n");
+    // printf("\nCode word:\n");
 for(i=0; i<1; i++) {
       for(j=0;j<N;j++) {
-         printf("%d ", C[i][j]);
+        // printf("%d ", C[i][j]);
          
          }
        }
  printf("\n\n");
- 
-}//main
 
+
+ int arr[3]={0};
+ for(i=0; i<3; i++){
+   //  printf(" %d ",arr[i]);}
+ } 
+}//main
+*/
 /*
 void codeword(){
   //B: base matrix
@@ -123,11 +129,11 @@ void codeword(){
 }
 */
 
-void codeword(){
+int main(){
 
-  int i, j ,k;
+  int i, j ,k, z=5;
   //B: base matrix
-  //fac: expansion factor
+  //z: expansion factor
   //codeword: codeword //output signal
   //H: parity check matrix
   //m: message (input) signal
@@ -137,21 +143,64 @@ void codeword(){
   //M: length of parity bits
  
   //Size of base matrix B
-  int rows, cols;
+  int rows, cols=10;
 
-  int codeword[1][cols*fac]; //initialise size of codeword array
+  int sizeC=cols*z;
+  printf("\ncodeword size: %d\n",sizeC);
+  int codeword[]={0}; //initialise size of codeword array
 
-  //Append message or input bits to codeword array
-  for (k=0; k<K; k++) //row index of input
-    {
-      for(i=0; i<1; i++)  //row of codeword
-	{
-	  for (j=0; j<(K*fac); j++) //column of codeword
-	    {
-	      codeword[i][j] = input[k]; 
-	    }
-	}
-    }
+  int H[3][7] = {
+     {1,1,1,0,1,0,0},
+     {1,0,1,1,0,1,0},
+     {1,1,0,1,0,0,1}
+};
+
+  //test
+  int sizeMsg=z*3;  //input size is z*num of message row in B
+ 
+  int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1};  //z*3=9
   
-}//end fx
+    printf("\ninput:\n");
+for(i=0; i<sizeMsg; i++)
+  {
+      printf("%d ", input[i]); 
+    
+  }
+/*
+ int zeros[]={0};
+ for (i=0; i<sizeC; i++) //row index of input
+    {
+      codeword[i] = zeros[0];
+       
+    }
+  printf("\n\nCodeword empty:\n");
+   for(i=0; i<sizeC; i++) {
+        printf("%d ", codeword[i]);   
+       }
+*/  
+  //Append message or input bits to codeword array
+  for (k=0; k<sizeMsg; k++) //row index of input
+    {
+      if (k>sizeMsg && k<=sizeC)
+	{codeword[k] = 0;}
+      
+      else
+	{ codeword[k] = input[k];}
+      
+    }
 
+  
+   printf("\n\nCodeword with message appended:\n");
+   for(i=0; i<sizeC; i++) {
+        printf("%d ", codeword[i]);   
+       }
+ 
+ 
+  //double diagonal encoding
+  int temp[z]; //declare temp
+  for (i=0; i<4; i++) //row 1 to 4
+    {
+      
+    }
+ 
+}//end codeword fx
