@@ -129,8 +129,9 @@ void codeword(){
 }
 */
 
-int main(){
 
+int main(){
+  
   int i, j ,k, z=5;
   //B: base matrix
   //z: expansion factor
@@ -166,18 +167,7 @@ for(i=0; i<sizeMsg; i++)
       printf("%d ", input[i]); 
     
   }
-/*
- int zeros[]={0};
- for (i=0; i<sizeC; i++) //row index of input
-    {
-      codeword[i] = zeros[0];
-       
-    }
-  printf("\n\nCodeword empty:\n");
-   for(i=0; i<sizeC; i++) {
-        printf("%d ", codeword[i]);   
-       }
-*/  
+ 
   //Append message or input bits to codeword array
   for (k=0; k<sizeMsg; k++) //row index of input
     {
@@ -196,11 +186,30 @@ for(i=0; i<sizeMsg; i++)
        }
  
  
-  //double diagonal encoding
-  int temp[z]; //declare temp
-  for (i=0; i<4; i++) //row 1 to 4
-    {
-      
-    }
+   // get_parity();
  
 }//end codeword fx
+
+void get_parity(){ //find p1, p2-p4
+  //need H array, msg array, z(expansion factor)
+  int m, k, i ,j, z=5;
+  for(m=0; m<4; m++) //1st 4 col of H
+    {
+      for(k=0; k<4; k++) //1st 4 rows of H
+	{
+	  for(i=0; i<z; i++) //First I row... got z bits
+	    {
+	      for(j=0; j<z; j++) //First I column... got z bits
+		{
+		  // H[k][m][i][j];
+		  // input[m]; //index 0-4 (m) , index 5-9 (m+5), index 10-14 (m+10)
+		}
+	    }	  
+	}
+    }
+}
+
+
+
+
+
