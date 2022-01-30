@@ -193,6 +193,8 @@ for(i=0; i<sizeMsg; i++)
 void get_parity(){ //find p1, p2-p4
   //need H array, msg array, z(expansion factor)
   int m, k, i ,j, z=5;
+
+  //for(input=0; input<len(input)/z; input++) //1st round m1, 2nd round m2
   for(m=0; m<4; m++) //1st 4 col of H
     {
       for(k=0; k<4; k++) //1st 4 rows of H
@@ -202,7 +204,7 @@ void get_parity(){ //find p1, p2-p4
 	      for(j=0; j<z; j++) //First I column... got z bits
 		{
 		  // H[k][m][i][j];
-		  // input[m]; //index 0-4 (m) , index 5-9 (m+5), index 10-14 (m+10)
+		  // input[m]; //index 0-4 (m+0z)=(m+input*z) , index 5-9 (m+5)=(m+z), index 10-14 (m+10)=(m+2z)=(m+
 		}
 	    }	  
 	}
