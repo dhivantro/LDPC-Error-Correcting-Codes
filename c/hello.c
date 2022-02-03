@@ -5,8 +5,7 @@
 
 int i, j, k;
 
-void get_parity();
-
+void get_parity(int input[], int z, int sizeMsg, int B_msg_col);
 
 int main(){
   
@@ -26,7 +25,12 @@ int main(){
 
   int sizeC=cols*z;
   printf("\ncodeword size: %d\n",sizeC);
-  int codeword[]={0}; //initialise size of codeword array
+  int codeword[sizeC]; //initialise size of codeword array
+
+  for(i=0; i<sizeC; i++)
+    {
+      codeword[i] = 0;
+    }
 
   int H[3][7] = {
      {1,1,1,0,1,0,0},
@@ -64,17 +68,36 @@ for(i=0; i<sizeMsg; i++)
         printf("%d ", codeword[i]);   
        }
  
- 
+  int p1[z], p2[z];
    get_parity(input, z, sizeMsg, B_msg_col);
+  //append p1 to codeword
+    for(i=0; i<z; i++)
+      {
+	codeword[i+sizeMsg-1] = p1[i];
+      }
+
+  
+  
  
 }//end codeword fx
 
-void get_parity(int input, int z, int sizeMsg, int B_msg_col){ //find p1, p2-p4
+void get_parity(int input[], int z, int sizeMsg, int B_msg_col){ //find p1, p2-p4
   //need H array, msg array, z(expansion factor)
   int m, k, i ,j, r;
-  int p1[]={}, parity[], product[], prodIM[];
+  int  parity[]={}, product[]={}, prodIM[]={};
 
   // int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1};  //z*3=9
+
+  /*
+  //Debug: testing is input array is passing to function
+    printf("\ninput:\n");
+for(i=0; i<sizeMsg; i++)
+  {
+      printf("%d ", input[i]); 
+    
+  }
+  */
+ 
     printf("\n\nget parity\n\n");
 
     for(i=0; i<z; i++)
@@ -129,7 +152,9 @@ void get_parity(int input, int z, int sizeMsg, int B_msg_col){ //find p1, p2-p4
 
 
     //Now, need to shift the parity[] to get p1[]
-    //then, return p1
+
+       
+ 
     
 }//fx
 
