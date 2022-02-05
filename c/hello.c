@@ -5,7 +5,7 @@
 
 int i, j, k;
 
-void get_parity(int input[], int z, int sizeMsg, int B_msg_col);
+void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int codeword[]);
 
 int main(){
   
@@ -21,7 +21,7 @@ int main(){
   //M: length of parity bits
  
   //Size of base matrix B
-  int rows, cols=10;
+  int rows, cols=20;
 
   int sizeC=cols*z;
   printf("\ncodeword size: %d\n",sizeC);
@@ -39,8 +39,9 @@ int main(){
 };
 
   //test
-  int B_msg_col = 3;
+  int B_msg_col = 10;
   int sizeMsg = z*B_msg_col;  //input size is z*num of message row in B
+  printf("\nmessage size: %d\n",sizeMsg);
  
   int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1};  //z*3=9
   
@@ -69,19 +70,15 @@ for(i=0; i<sizeMsg; i++)
        }
  
   int p1[z], p2[z];
-   get_parity(input, z, sizeMsg, B_msg_col);
-  //append p1 to codeword
-    for(i=0; i<z; i++)
-      {
-	codeword[i+sizeMsg-1] = p1[i];
-      }
+  get_parity(input, z, sizeMsg, B_msg_col, codeword);
+ 
 
   
   
  
 }//end codeword fx
 
-void get_parity(int input[], int z, int sizeMsg, int B_msg_col){ //find p1, p2-p4
+void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int codeword[]){ //find p1, p2-p4
   //need H array, msg array, z(expansion factor)
   int m, k, i ,j, r;
   int  parity[]={}, product[]={}, prodIM[]={};
@@ -99,13 +96,13 @@ for(i=0; i<sizeMsg; i++)
   */
  
     printf("\n\nget parity\n\n");
-
+    
     for(i=0; i<z; i++)
       {
 	parity[i]=0;
       }
     
-    for(m=0; m<B_msg_col; m++) //1st 4 col of H
+    for(m=0; m<B_msg_col; m++) //1st x col of H (msg part)
     {
       for(k=0; k<4; k++) //1st 4 rows of H
 	{
@@ -143,6 +140,7 @@ for(i=0; i<sizeMsg; i++)
 	    }//i
 	  
 	   //Sum parities at every new row in 1st column (for IM)
+	  //At the end, will have parity array with z bits
 	    for(r=0; r<z; r++)
 	     {
 	       parity[r] = parity[r] + prodIM[r];
@@ -153,8 +151,74 @@ for(i=0; i<sizeMsg; i++)
 
     //Now, need to shift the parity[] to get p1[]
 
-       
- 
+
+     //append p1 to codeword
+    for(i=0; i<z; i++)
+      {
+	codeword[i+sizeMsg-1] = p1[i];
+      }
+    
+    //-------P2 TO P4-------//
+
+    //reset parity array
+      for(i=0; i<z; i++)
+      {
+	parity[i]=0;
+      }
+
+    //traverse by row and Hcolumn in codeword (all msg and one p)
+    
+    for (k=0; k<3; k++) //row H 1 to 3
+      {
+	for (m=0; m<B_msg_col+(k+1); m++) //H column from msg 0 to parity 1,2,3
+	  {
+	    for (i=0; i<z; i++) //I col
+	      {
+		for (j=0; j<z; j++) //I row
+		  {
+		    product[j] = codeword[j + m*z] * H[k][m][j][i];
+		  }//j
+		
+		int sum=0;
+		for(r=0; r<z; r++)
+		  {
+		    sum = sum + product[r]; //value of product of every I*m		 
+		  }
+	      
+		prodIM[i] = sum;
+		
+	      }//i
+	    
+	     //Sum parities at every new row in 1st column (for IM)
+	    for(r=0; r<z; r++)
+	     {
+	       parity[r] = parity[r] + prodIM[r];
+	     }
+	    
+	  }//m
+
+	//append parity array to codeword
+	int w;
+	for(w=0; w<z; w++)
+	  {
+	    codeword[i + (sizeMsg-1) + (k+1)*z] = parity[w];
+	  }
+
+	//reset parity array before going to new row
+	int y;
+	  for(y=0; y<z; y++)
+	    {
+	      parity[y]=0;
+	    }	
+      }//k
+      	  
+    //-------P5 TO PN-------//
+
+    //reset parity array
+      for(i=0; i<z; i++)
+      {
+	parity[i]=0;
+      }
     
 }//fx
 
