@@ -5,7 +5,7 @@
 
 int i, j, k;
 
-void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int codeword[]);
+void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int Brows, int codeword[]);
 
 int main(){
   
@@ -21,7 +21,7 @@ int main(){
   //M: length of parity bits
  
   //Size of base matrix B
-  int rows, cols=20;
+  int Brows=20, Bcols=20;
 
   int sizeC=cols*z;
   printf("\ncodeword size: %d\n",sizeC);
@@ -78,7 +78,7 @@ for(i=0; i<sizeMsg; i++)
  
 }//end codeword fx
 
-void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int codeword[]){ //find p1, p2-p4
+void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int Brows, int codeword[]){ //find p1, p2-p4
   //need H array, msg array, z(expansion factor)
   int m, k, i ,j, r;
   int  parity[]={}, product[]={}, prodIM[]={};
@@ -201,7 +201,7 @@ for(i=0; i<sizeMsg; i++)
 	int w;
 	for(w=0; w<z; w++)
 	  {
-	    codeword[i + (sizeMsg-1) + (k+1)*z] = parity[w];
+	    codeword[(sizeMsg-1) + (k+1)*w] = parity[w];
 	  }
 
 	//reset parity array before going to new row
@@ -209,6 +209,7 @@ for(i=0; i<sizeMsg; i++)
 	  for(y=0; y<z; y++)
 	    {
 	      parity[y]=0;
+	      prodIM[y]=0;
 	    }	
       }//k
       	  
@@ -219,6 +220,54 @@ for(i=0; i<sizeMsg; i++)
       {
 	parity[i]=0;
       }
+
+      for (k=4; k<Brows; k++)
+	{
+	  for (m=0; m<(B_msg_col+k); m++)
+	    {
+	      for (i=0; i<z; i++) //I col
+		{
+		  for (j=0; j<z; j++) //I row
+		    {
+
+		      product[j] = codeword[j + m*z] * H[k][m][j][i];
+		      
+		    }//j
+
+		int sum=0;
+		for(r=0; r<z; r++)
+		  {
+		    sum = sum + product[r]; //value of product of every I*m		 
+		  }
+	      
+		prodIM[i] = sum;
+		
+		}//i
+
+	       //Sum parities at every new row in 1st column (for IM)
+	    for(r=0; r<z; r++)
+	     {
+	       parity[r] = parity[r] + prodIM[r];
+	     }
+	    
+	    }//m
+
+	  //append parity array to codeword
+	int w;
+	for(w=0; w<z; w++)
+	  {
+	    codeword[(sizeMsg-1) + k*w] = parity[w];
+	  }
+
+	//reset parity array before going to new row
+	int y;
+	  for(y=0; y<z; y++)
+	    {
+	      parity[y]=0;
+	      prodIM[y]=0;
+	    }
+	  
+	}//k
     
 }//fx
 
