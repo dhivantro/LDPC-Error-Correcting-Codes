@@ -23,7 +23,7 @@ int main(){
   //Size of base matrix B
   int Brows=20, Bcols=20;
 
-  int sizeC=cols*z;
+  int sizeC=Bcols*z;
   printf("\ncodeword size: %d\n",sizeC);
   int codeword[sizeC]; //initialise size of codeword array
 
@@ -43,7 +43,7 @@ int main(){
   int sizeMsg = z*B_msg_col;  //input size is z*num of message row in B
   printf("\nmessage size: %d\n",sizeMsg);
  
-  int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1};  //z*3=9
+  int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1};  //z*3=9
   
     printf("\ninput:\n");
 for(i=0; i<sizeMsg; i++)
@@ -70,12 +70,9 @@ for(i=0; i<sizeMsg; i++)
        }
  
   int p1[z], p2[z];
-  get_parity(input, z, sizeMsg, B_msg_col, codeword);
+  get_parity(input, z, sizeMsg, B_msg_col, Brows, codeword);
  
 
-  
-  
- 
 }//end codeword fx
 
 void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int Brows, int codeword[]){ //find p1, p2-p4
@@ -151,11 +148,10 @@ for(i=0; i<sizeMsg; i++)
 
     //Now, need to shift the parity[] to get p1[]
 
-
      //append p1 to codeword
     for(i=0; i<z; i++)
       {
-	codeword[i+sizeMsg-1] = p1[i];
+	codeword[i+sizeMsg-1] = parity[i];
       }
     
     //-------P2 TO P4-------//
