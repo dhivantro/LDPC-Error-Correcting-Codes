@@ -2,7 +2,7 @@
  #define row_B 46
 #define column_B 68
 #define expFactor 5
-#define row_msg_B 22
+#define column_msg_B 22
 
  int B[row_B][column_B];
  int H[row_B][column_B][expFactor][expFactor];
