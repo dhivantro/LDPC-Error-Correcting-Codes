@@ -1,0 +1,7 @@
+
+vg="valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes"
+
+#gcc -o hello hello.c && ./hello
+#gcc -o encoder encoder_dhiva.c && ./encoder
+gcc -o decoder decoder_dhiva.c && ./decoder
+
