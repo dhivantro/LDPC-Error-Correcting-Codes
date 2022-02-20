@@ -1,96 +1,57 @@
 #include <stdio.h>
 #include <math.h>
 
+#define row_B 46
+#define column_B 68
+#define expFactor 5
+#define column_msg_B 22
+#define sizeC (column_B*expFactor)
 
+//int sizeC=column_B*5;
+int codeword[sizeC];
+int parity[expFactor];
 
 int i, j, k;
+int z = 5;
 
-void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int Brows, int codeword[]);
+//void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int Brows);
 
-int main(){
-  
-  int i, j ,k, z=5;
-  //B: base matrix
-  //z: expansion factor
-  //codeword: codeword //output signal
-  //H: parity check matrix
-  //m: message (input) signal
 
-  //N: length of output signal (codeword)
-  //K: length of input signal
-  //M: length of parity bits
- 
-  //Size of base matrix B
-  int Brows=20, Bcols=20;
-
-  int sizeC=Bcols*z;
-  printf("\ncodeword size: %d\n",sizeC);
-  int codeword[sizeC]; //initialise size of codeword array
-
-  for(i=0; i<sizeC; i++)
+void append_p1(int p1[]){
+  //append p1 to codeword
+  for(i=0; i<z; i++)
     {
-      codeword[i] = 0;
+      codeword[i+sizeMsg-1] = p1[i];
     }
+}
 
-  int H[3][7] = {
-     {1,1,1,0,1,0,0},
-     {1,0,1,1,0,1,0},
-     {1,1,0,1,0,0,1}
-};
+void rotating_p1(int parity[], int start, int end){
 
-  //test
-  int B_msg_col = 10;
-  int sizeMsg = z*B_msg_col;  //input size is z*num of message row in B
-  printf("\nmessage size: %d\n",sizeMsg);
- 
-  int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1};  //z*3=9
-  
-    printf("\ninput:\n");
-for(i=0; i<sizeMsg; i++)
-  {
-      printf("%d ", input[i]); 
-    
-  }
- 
-  //Append message or input bits to codeword array
-  for (k=0; k<sizeMsg; k++) //row index of input
+  while (start < end)
     {
-      if (k>sizeMsg && k<=sizeC)
-	{codeword[k] = 0;}
-      
-      else
-	{ codeword[k] = input[k];}
-      
+      int temp = parity[start];
+      parity[start] = parity[end];
+      parity[end] = temp;
+      start++;
+      end--;
     }
+}
 
   
-   printf("\n\nCodeword with message appended:\n");
-   for(i=0; i<sizeC; i++) {
-        printf("%d ", codeword[i]);   
-       }
- 
-  int p1[z], p2[z];
-  get_parity(input, z, sizeMsg, B_msg_col, Brows, codeword);
- 
+void shifting_p1(int parity[], int n){
 
-}//end codeword fx
+  rotating_p1(parity, 0, z-1);
+  rotating_p1(parity, 0, n-1);
+  rotating_p1(parity, n, z-1);
 
-void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int Brows, int codeword[]){ //find p1, p2-p4
+  append_p1(parity);
+}
+
+void get_parity(int input[], int z, int sizeMsg, int B_msg_col, int Brows){ //find p1, p2-p4
   //need H array, msg array, z(expansion factor)
   int m, k, i ,j, r;
   int  parity[]={}, product[]={}, prodIM[]={};
 
-  // int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1};  //z*3=9
-
-  /*
-  //Debug: testing is input array is passing to function
-    printf("\ninput:\n");
-for(i=0; i<sizeMsg; i++)
-  {
-      printf("%d ", input[i]); 
-    
-  }
-  */
  
     printf("\n\nget parity\n\n");
     
@@ -145,14 +106,18 @@ for(i=0; i<sizeMsg; i++)
 	}//k
     }//m
 
-
     //Now, need to shift the parity[] to get p1[]
+    //Getting value of p1 position in B
+    int n;
+    
+    if (B[1][column_msg_B] == -1)
+      { n = B[2][column_msg_B]; }
+    else
+      { n = B[1][column_msg_B]; }
 
-     //append p1 to codeword
-    for(i=0; i<z; i++)
-      {
-	codeword[i+sizeMsg-1] = parity[i];
-      }
+    shifting_p1(parity, (z-n) );
+    
+  
     
     //-------P2 TO P4-------//
 
@@ -267,9 +232,70 @@ for(i=0; i<sizeMsg; i++)
     
 }//fx
 
-void convert_to_2d(){
 
-  //H[n][k][i][j]
+int main(){
   
+  int i, j ,k, z=5;
+  //B: base matrix
+  //z: expansion factor
+  //codeword: codeword //output signal
+  //H: parity check matrix
+  //m: message (input) signal
 
-}
+  //N: length of output signal (codeword)
+  //K: length of input signal
+  //M: length of parity bits
+ 
+  //Size of base matrix B
+  int Brows=20, Bcols=20;
+
+  int sizeC=Bcols*z;
+  printf("\ncodeword size: %d\n",sizeC);
+  int codeword[sizeC]; //initialise size of codeword array
+
+  for(i=0; i<sizeC; i++)
+    {
+      codeword[i] = 0;
+    }
+
+  int H[3][7] = {
+     {1,1,1,0,1,0,0},
+     {1,0,1,1,0,1,0},
+     {1,1,0,1,0,0,1}
+};
+
+  //test
+  int B_msg_col = 10;
+  int sizeMsg = z*B_msg_col;  //input size is z*num of message row in B
+  printf("\nmessage size: %d\n",sizeMsg);
+ 
+  int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1};  //z*3=9
+  
+    printf("\ninput:\n");
+for(i=0; i<sizeMsg; i++)
+  {
+      printf("%d ", input[i]); 
+    
+  }
+ 
+  //Append message or input bits to codeword array
+  for (k=0; k<sizeMsg; k++) //row index of input
+    {
+      if (k>sizeMsg && k<=sizeC)
+	{codeword[k] = 0;}
+      
+      else
+	{ codeword[k] = input[k];}
+      
+    }
+
+  
+   printf("\n\nCodeword with message appended:\n");
+   for(i=0; i<sizeC; i++) {
+        printf("%d ", codeword[i]);   
+       }
+ 
+  int p1[z], p2[z];
+  get_parity(input, z, sizeMsg, B_msg_col, Brows);
+ 
+}//end codeword fx
