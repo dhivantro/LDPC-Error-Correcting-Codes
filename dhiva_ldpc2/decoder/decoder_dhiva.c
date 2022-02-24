@@ -46,6 +46,7 @@ void update_parity_L(float n, int i){
 	}
       //printf("L[%d][%d]: %f ",i,j,L[i][j]);
     }
+  printf("\n");
   printf("\n n: %f",n);
 }
 
@@ -127,7 +128,7 @@ void Adjust_Row_Element(double first, double second, int index){
    
 }
 
-void L_row_operation(){
+void row_operation(){
 
   int i, j, k;
   double first, second;
@@ -203,6 +204,13 @@ void L_row_operation(){
    
 }//fx
 
+void L_row_operation(){
+
+  row_operation(); //Get magnitude
+  get_parity_L(); //Get the sign first
+  
+  update_L_matrix(); //Updating magnitude with sign
+}
 
 void L_initial(){
 
@@ -315,10 +323,8 @@ int main(){
     }
    
   L_initial(); //initialisation
-  L_row_operation(); //Get magnitude
-  get_parity_L(); //Get the sign first
+  L_row_operation();
   
-  update_L_matrix(); //Updating magnitude with sign
   print_L_matrix();
 
  
