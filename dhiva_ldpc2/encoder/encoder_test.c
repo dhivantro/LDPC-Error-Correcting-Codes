@@ -14,7 +14,9 @@
 //int codeword[sizeC];
  int parity[expFactor];
 
- int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
+int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
+//int sizeMsg = column_B - row_B;
+
 
  //variables in for loop
  int i=0;
@@ -43,7 +45,7 @@ void append_p1(){
     {
       codeword[i+sizeMsg-1] = (parity[i]%2);
       //printf("\n%d    %d",parity[i]%2, codeword[i+sizeMsg-1]);
-      //printf("\n%d",parity[i]%2);
+      printf("\n%d",parity[i]%2);
  
     }
 }
@@ -77,18 +79,20 @@ void get_parity(){
 
   
   int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
+  
+  
   //-------------------P1------------------//
   
   //reset parity array
   for(i=0; i<z; i++)
    {
-     parity[i]=0;
+     parity[i]=0;  //temp
    }
 
   //Finding p1
   for(m=0; m<column_msg_B; m++) //1st x col of H (msg part)
     {
-      for(k=0; k<4; k++) //1st 4 rows of H
+      for(k=0; k<4; k++) //1st 4 rows of B
 	{
 	  //printf("\nH Col %d ",m);
 	  // printf("\nH Row %d ",k);
@@ -98,18 +102,23 @@ void get_parity(){
 	      
 	      for(j=0; j<z; j++) //First I row... got z bits
 		{
-		  	       		  
-		   product[j] = input[j + m*z] * H[k][m][j][i];
+	 	        
+		  //product[j] = input[j + m*z] * H[k][m][i][j];
+		  product[j] = input[j] * H[k][m][i][j];
+		   //printf(" %d ", input[j]);
+		  printf("%d ", input[j]);
+		  //printf("\n");
 		  		  
 		}//j
 
+	      printf("\n\n");
 	      int sum=0;
 	      for(r=0; r<z; r++)
 		{
 		  sum = sum + product[r]; //value of product of every I*m
-		  //printf("\n%d",sum);
+		  //printf("%d ",sum);
 		}
-	      
+
 	      prodIM[i] = sum; //will have z size array containing IM elements
 	     		   
 	      
@@ -120,11 +129,20 @@ void get_parity(){
 	    for(r=0; r<z; r++)
 	     {
 	       parity[r] = parity[r] + prodIM[r];
-	       //printf("%d ",z);
+	       //printf("\npar: %d ",parity[r]);
 	       
 	     }
+	    
 	}//k
     }//m
+
+   for(int r=0; r<z; r++)
+	{
+	       //parity[r] = parity[r] + prodIM[r];
+	  //parity[r] = parity[r]%2;
+	       printf("\npar: %d ",parity[r]);
+	       
+	     }
 
   //---------------Reshifting for P1--------------//
   //Now, need to shift the parity[] to get p1[]
@@ -409,8 +427,11 @@ void positive_matrix()
    }
  }
 
+
+
  int main()
  {
+   
     //Import base matrix from txt file
     FILE* f;
     f=fopen("NR_1_2_5.txt", "r");
@@ -449,7 +470,7 @@ void positive_matrix()
  	    }
  	}
      }
-   //print_All();
+   //print_All();   
    initialise_codeword();
    get_parity();
    // convert(); //Convert 4D H to 2D h
