@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdint.h> //for uint8_t
+
 #define row_B 46
 #define column_B 68
 #define expFactor 5
@@ -9,9 +11,10 @@
  int H[row_B][column_B][expFactor][expFactor];
  int H_2D [row_B*expFactor] [column_B*expFactor];
  int codeword[sizeC];
+//int codeword[sizeC];
  int parity[expFactor];
 
-int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
+ int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
 
  //variables in for loop
  int i=0;
@@ -28,7 +31,7 @@ void print_codeword(){
   printf("\n\n--------------------codeword:-------------\n\n");
   for(i=0; i<sizeC; i++)
     {
-      printf("%d ", codeword[i]);   
+      printf("%d ", codeword[i]%2);   
     }
 
   printf("\n\n-------------Codeword is printed---------------\n\n");
@@ -38,7 +41,10 @@ void append_p1(){
   //append p1 to codeword
   for(i=0; i<expFactor; i++)
     {
-      codeword[i+sizeMsg-1] = parity[i];
+      codeword[i+sizeMsg-1] = (parity[i]%2);
+      //printf("\n%d    %d",parity[i]%2, codeword[i+sizeMsg-1]);
+      //printf("\n%d",parity[i]%2);
+ 
     }
 }
 
@@ -64,11 +70,13 @@ void shifting_p1(int n, int z){
 }
 
 
-void get_parity(int input[]){
+void get_parity(){
 
   int m, k, i, j, r, z=expFactor;
   int product[]={}, prodIM[]={};
 
+  
+  int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
   //-------------------P1------------------//
   
   //reset parity array
@@ -98,7 +106,8 @@ void get_parity(int input[]){
 	      int sum=0;
 	      for(r=0; r<z; r++)
 		{
-		  sum = sum + product[r]; //value of product of every I*m		 
+		  sum = sum + product[r]; //value of product of every I*m
+		  //printf("\n%d",sum);
 		}
 	      
 	      prodIM[i] = sum; //will have z size array containing IM elements
@@ -111,6 +120,8 @@ void get_parity(int input[]){
 	    for(r=0; r<z; r++)
 	     {
 	       parity[r] = parity[r] + prodIM[r];
+	       //printf("%d ",z);
+	       
 	     }
 	}//k
     }//m
@@ -124,8 +135,8 @@ void get_parity(int input[]){
       { n = B[2][column_msg_B]; }
     else
       { n = B[1][column_msg_B]; }
-
-    shifting_p1( (z-n), z ); //(z-1) so that it shifts to the left
+    //printf("\n%d",z-n-1);
+    shifting_p1( (z-n-1), z ); //(z-1) so that it shifts to the left
 
 
     //-------P2 TO P4-------//
@@ -171,7 +182,9 @@ void get_parity(int input[]){
 	int w;
 	for(w=0; w<z; w++)
 	  {
-	    codeword[(sizeMsg-1) + (k+1)*w] = parity[w];
+	    codeword[(sizeMsg-1) + (k+1)*w] = (parity[w]%2);
+	    //printf("%d ",parity[w]%2);
+	    
 	  }
 
 	//reset parity array before going to new row
@@ -218,6 +231,8 @@ void get_parity(int input[]){
 	    for(r=0; r<z; r++)
 	     {
 	       parity[r] = parity[r] + prodIM[r];
+	       //printf("\n %d",parity[r]%2);
+	       //parity[r] = parity[r];
 	     }
 	    
 	    }//m
@@ -226,7 +241,8 @@ void get_parity(int input[]){
 	int w;
 	for(w=0; w<z; w++)
 	  {
-	    codeword[(sizeMsg-1) + k*w] = parity[w];
+	    codeword[(sizeMsg-1) + k*w] = (parity[w]%2);
+	    // printf("%d ",parity[w]%2);
 	  }
 
 	//reset parity array before going to new row
@@ -242,7 +258,7 @@ void get_parity(int input[]){
 }//get_parity fx
 
 
-void codeword(){
+void initialise_codeword(){
 
   int i, j, k;
 
@@ -253,7 +269,7 @@ void codeword(){
 
    int sizeMsg = expFactor*column_msg_B;
 
-   int input [] = {0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1};
+   int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
 
 
     //Append message or input bits to codeword array
@@ -266,7 +282,8 @@ void codeword(){
 	{ codeword[k] = input[k];}  
     }
 
-  get_parity(input);
+  // get_parity(input);
+  
 }
 
 void convert(){
@@ -433,7 +450,10 @@ void positive_matrix()
  	}
      }
    //print_All();
-   codeword();
+   initialise_codeword();
+   get_parity();
    // convert(); //Convert 4D H to 2D h
-   print_codeword();
+   //print_codeword();
+
+   
  }
