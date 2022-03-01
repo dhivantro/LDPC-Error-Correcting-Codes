@@ -45,7 +45,7 @@ void append_p1(){
     {
       codeword[i+sizeMsg-1] = (parity[i]%2);
       //printf("\n%d    %d",parity[i]%2, codeword[i+sizeMsg-1]);
-      printf("\n%d",parity[i]%2);
+      //printf("\n%d",parity[i]);
  
     }
 }
@@ -74,8 +74,8 @@ void shifting_p1(int n, int z){
 
 void get_parity(){
 
-  int m, k, i, j, r, z=expFactor, sum;
-  int product[]={}, prodIM[row_B*z], multiply[z], temp[z];
+  int m, k, i, j, r, b, z=expFactor, sum;
+  int product[]={}, prodIM[row_B*z], multiply[z], temp[z], sum_temp[z];
 
   
   int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
@@ -87,12 +87,13 @@ void get_parity(){
   for(i=0; i<z; i++)
    {
      parity[i]=0;  //temp
+     sum_temp[i] = 0;
    }
 
   //Finding p1
-  for(m=0; m<2; m++) //1st x col of H (msg part)
+  for(m=0; m<column_msg_B; m++) //1st x col of H (msg part)
     {
-      for(k=0; k<1; k++) //1st 4 rows of B
+      for(k=0; k<4; k++) //1st 4 rows of B
 	{
 	  //printf("\nH Col %d ",m);
 	  // printf("\nH Row %d ",k);
@@ -129,10 +130,18 @@ void get_parity(){
 	      	}
 	       
 	       //printf("\n %d ",sum);
-	       prodIM[i + k*z] = sum;
+	       //prodIM[i + k*z] = sum;
+	       prodIM[i] = sum;
+	       sum_temp[i] = sum_temp[i] + prodIM[i];
+		for (b=0; b<z; b++)
+		  {
+		    //sum_temp[b] = sum_temp[b] + prodIM[b];
+		    //printf("\n %d",sum_temp[b]);
+		  }
+		
 	        //will have z size array containing IM elements
-	     	//printf("\n %d ",prodIM[i + k*z]);
-	       //printf("\n %d ",i + k*z);
+	     	//printf("\n %d ",prodIM[i]);
+		//printf("\n %d ",i + k*z);
 	      
 	    }//i
 	  
@@ -142,7 +151,7 @@ void get_parity(){
 	  // {
 	  //  parity[r] = parity[r] + prodIM[r];
 	       //printf("\npar: %d ",parity[r]);
-	       
+	  //printf("\n");
 	  // }
 	    
 	}//k
@@ -152,9 +161,11 @@ void get_parity(){
 	{
 	       //parity[r] = parity[r] + prodIM[r];
 	  //parity[r] = parity[r]%2;
-	       printf("\npar: %d ",parity[r]);
-	       
+	   parity[r] = sum_temp[r] %2;
+	   printf("\n %d ",sum_temp[r]);	 	       
 	     }
+
+   printf("\n");
 
   //---------------Reshifting for P1--------------//
   //Now, need to shift the parity[] to get p1[]
