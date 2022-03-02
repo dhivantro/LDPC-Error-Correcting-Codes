@@ -10,7 +10,7 @@
  int B[row_B][column_B];
  int H[row_B][column_B][expFactor][expFactor];
  int H_2D [row_B*expFactor] [column_B*expFactor];
- int codeword[sizeC];
+int codeword[sizeC];
 //int codeword[sizeC];
  int parity[expFactor];
 
@@ -33,7 +33,7 @@ void print_codeword(){
   printf("\n\n--------------------codeword:-------------\n\n");
   for(i=0; i<sizeC; i++)
     {
-      printf("%d ", codeword[i]%2);   
+      printf("%d ", codeword[i]);   
     }
 
   printf("\n\n-------------Codeword is printed---------------\n\n");
@@ -43,11 +43,12 @@ void append_p1(){
   //append p1 to codeword
   for(i=0; i<expFactor; i++)
     {
-      codeword[i+sizeMsg-1] = (parity[i]%2);
-      //printf("\n%d    %d",parity[i]%2, codeword[i+sizeMsg-1]);
+      codeword[i+sizeMsg] = parity[i];
+      //printf("\n%d    %d",parity[i], codeword[i+sizeMsg]);
       //printf("\n%d",parity[i]);
  
     }
+  //print_codeword();
 }
 
 void rotating_p1(int start, int end){
@@ -74,7 +75,7 @@ void shifting_p1(int n, int z){
 
 void get_parity(){
 
-  int m, k, i, j, r, b, z=expFactor, sum;
+  int m, k, i, j, r, b, q, z=expFactor, sum;
   int product[]={}, prodIM[row_B*z], multiply[z], temp[z], sum_temp[z];
 
   
@@ -141,7 +142,7 @@ void get_parity(){
 		
 	        //will have z size array containing IM elements
 	     	//printf("\n %d ",prodIM[i]);
-		//printf("\n %d ",i + k*z);
+		//printf("\n %d ",sum_temp[i]);
 	      
 	    }//i
 	  
@@ -161,9 +162,12 @@ void get_parity(){
 	{
 	       //parity[r] = parity[r] + prodIM[r];
 	  //parity[r] = parity[r]%2;
-	   parity[r] = sum_temp[r] %2;
-	   printf("\n %d ",sum_temp[r]);	 	       
+	   parity[r] = sum_temp[r]%2;
+	   //printf("\n %d  ", parity[r]);
+	   //codeword[r+sizeMsg] = parity[i];
 	     }
+  
+   //print_codeword();
 
    printf("\n");
 
@@ -177,7 +181,7 @@ void get_parity(){
     else
       { n = B[1][column_msg_B]; }
     //printf("\n%d",z-n-1);
-    shifting_p1( (z-n-1), z ); //(z-1) so that it shifts to the left
+    shifting_p1( n, z ); //shift by n to the right to get original parity bit
 
 
     //-------P2 TO P4-------//
@@ -186,56 +190,85 @@ void get_parity(){
       for(i=0; i<z; i++)
       {
 	parity[i]=0;
+	sum_temp[i] = 0;
       }
-
+      
+      //m<column_msg_B+(q+1)
     //traverse by row and Hcolumn in codeword (all msg and one p)
-    
-    for (k=0; k<3; k++) //row H 1 to 3
+      for(q=0; q<3; q++)
+	{
+      for (m=0; m<column_msg_B+(q+1); m++ ) //row H 1 to 3
       {
-	for (m=0; m<column_msg_B+(k+1); m++) //H column from msg 0 to parity 1,2,3
+	printf("\nm: %d ",m);
+	for (k=0; k<(1+q); k++) //H column from msg 0 to parity 1,2,3
 	  {
+	    //printf("\nm: %d ",m);
+	    
 	    for (i=0; i<z; i++) //I col
 	      {
 		for (j=0; j<z; j++) //I row
 		  {
-		    product[j] = codeword[j + m*z] * H[k][m][j][i];
+
+		    temp[j] = codeword[j + m*z];
+		    
+		    //product[j] = codeword[j + m*z] * H[k][m][j][i];
+		     multiply[j] = (temp[j] * H[k][m][i][j] );
+		     //printf("%d ", temp[j]);
 		  }//j
-		
+
+		//printf("\n");
 		int sum=0;
 		for(r=0; r<z; r++)
 		  {
-		    sum = sum + product[r]; //value of product of every I*m		 
+		    sum = sum + multiply[r]; //value of product of every I*m		 
 		  }
+		//printf(" \n %d ",sum);
 	      
 		prodIM[i] = sum;
+	        sum_temp[i] = sum_temp[i] + prodIM[i];
+		printf(" \n %d  %d",m,sum_temp[i]);	           
 		
 	      }//i
 	    
 	     //Sum parities at every new row in 1st column (for IM)
-	    for(r=0; r<z; r++)
+	   
+	    //printf("\n m %d \n",m+1);
+	    	 for(r=0; r<z; r++)
 	     {
-	       parity[r] = parity[r] + prodIM[r];
+	       //parity[r] = parity[r] + prodIM[r];
+	       //printf("\nm: %d k: %d  %d ",m,k,sum_temp[r]);
 	     }
-	    
-	  }//m
+		 printf("\n");
+	  }//k
 
 	//append parity array to codeword
 	int w;
 	for(w=0; w<z; w++)
 	  {
-	    codeword[(sizeMsg-1) + (k+1)*w] = (parity[w]%2);
-	    //printf("%d ",parity[w]%2);
-	    
+	    //codeword[(sizeMsg-1) + (k+1)*w] = (parity[w]%2);
+	    //printf("\nm: %d   %d ",m,sum_temp[w]);	    
 	  }
 
 	//reset parity array before going to new row
 	int y;
 	  for(y=0; y<z; y++)
 	    {
+	      //parity[y]=0;
+	      //prodIM[y]=0;
+	      //sum_temp[y]=0;
+	    }
+	  //q++;
+	  printf("\n");
+      }//m
+
+      	int y;
+	  for(y=0; y<z; y++)
+	    {
 	      parity[y]=0;
 	      prodIM[y]=0;
-	    }	
-      }//k
+	      sum_temp[y]=0;
+	    }
+	}//q
 
     //-------P5 TO PN-------//
 
@@ -495,6 +528,7 @@ void positive_matrix()
      }
    //print_All();   
    initialise_codeword();
+   //print_codeword();
    get_parity();
    // convert(); //Convert 4D H to 2D h
    //print_codeword();
