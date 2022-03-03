@@ -10,8 +10,6 @@
  int B[row_B][column_B];
  int H[row_B][column_B][expFactor][expFactor];
  int H_2D [row_B*expFactor] [column_B*expFactor];
-int codeword[sizeC];
-int codeword_temp[sizeC];
 //int codeword[sizeC];
  int parity[expFactor];
 
@@ -28,7 +26,7 @@ int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
  int pK=0;
  int pM=0;
 
-void syndrome(){
+void syndrome(int codeword[]){
 
   //This section calculates syndrome
   //If 0, valid
@@ -71,7 +69,7 @@ void syndrome(){
 
 }
 
-void print_codeword(){
+void print_codeword(int codeword[]){
 
   int i;
   
@@ -84,7 +82,7 @@ void print_codeword(){
   printf("\n\n-------------Codeword is printed---------------\n\n");
 }
 
-void append_p1(){
+void append_p1(int codeword[]){
   //append p1 to codeword
   for(i=0; i<expFactor; i++)
     {
@@ -109,26 +107,28 @@ void rotating_p1(int start, int end){
     }
 }
 
-void shifting_p1(int n, int z){
+void shifting_p1(int n, int z, int codeword[]){
 
   rotating_p1(0, z-1);
   rotating_p1(0, n-1);
   rotating_p1(n, z-1);
 
-  append_p1();
+  append_p1(codeword);
 }
 
 
-void get_parity(){
+void get_parity(int msgs[], int codeword[]){
 
-  int m, k, i, j, r, b, q, z=expFactor, sum;
-  int product[]={}, prodIM[row_B*z], multiply[z], temp[z], sum_temp[z], cword_temp[]={};
+  int m, k, i, j, r, b, q, z=expFactor, sum, bb;
+  int product[]={}, prodIM[row_B*z], multiply[z], temp[z], sum_temp[z], input[sizeMsg];
 
-  /*
-  int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
-  */
+  
 
-    int input[] = {0,	0,	0,	1,	0,	1,	1,	1,	0,	0,	0,	1,	0,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	0,	0,	0,	0,	0,	0,	1,	1,	0,	0,	0,	1,	0,	0,	1,	0,	0,	0,	0,	0,	1,	1,	1,	0,	0,	0,	1,	0,	0,	0,	1,	1,	1,	0,	1,	0,	1,	0,	1,	0,	0,	1,	1,	0,	1,	1,	0,	0,	0,	0,	1,	1,	1,	1,	1,	0,	1,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	0,	1,	0,	0,	0,	0,	0};
+  for (i=0; i<sizeMsg; i++)
+    {
+      input[i] = msgs[i];
+      //printf(" %d",i);
+    }
   
   //-------------------P1------------------//
   
@@ -157,7 +157,7 @@ void get_parity(){
 		  // {
 		      temp[j] = input[j + m*z];
 		      
-		      //printf(" %d",  H[k][m][i][t]);
+		      //printf("\n %d",  j + m*z);
 		      //}
 		  //product[j] = input[j + m*z] * H[k][m][i][j];
 		  // product[j] = input[j] * H[k][m][i][j];
@@ -229,9 +229,12 @@ void get_parity(){
     else
       { n = B[1][column_msg_B]; }
     //printf("\n%d",z-n-1);
-    shifting_p1( n, z ); //shift by n to the right to get original parity bit
+    shifting_p1( n, z, codeword); //shift by n to the right to get original parity bit
 
+    //print_codeword();
 
+    
+    
     //-------P2 TO P4-------//
 
     //reset parity array
@@ -240,6 +243,8 @@ void get_parity(){
 	parity[i]=0;
 	sum_temp[i] = 0;
       }
+
+      int  cword_temp[(column_B - column_msg_B - 1)*z];
       
       //m<column_msg_B+(q+1)
     //traverse by row and Hcolumn in codeword (all msg and one p)
@@ -258,7 +263,7 @@ void get_parity(){
 		  {
 
 		    temp[j] = codeword[j + m*z];
-		    
+		    //printf("\nm:%d k:%d i:%d   %d ",m,k,i,j+m*z);
 		    //product[j] = codeword[j + m*z] * H[k][m][j][i];
 		     multiply[j] = (temp[j] * H[k][m][i][j] );
 		     //printf("%d ",  H[k][m][i][j]);
@@ -297,6 +302,7 @@ void get_parity(){
 	    parity[w] = sum_temp[w];
 	    //cword_temp[(sizeMsg+z) + w + q*z] = parity[w];
 	    cword_temp[w+q*z] = parity[w];
+	    //codeword[sizeMsg + q + q*z] = parity[w];
 	    //printf("\nm: %d   %d ",m,w+q*z);
 	    //printf("\nk:%d %d",k, cword_temp[(sizeMsg+z) + w + q*z] );	    	    
 	  }
@@ -333,7 +339,6 @@ void get_parity(){
 
 	}//q
 
-      int bb;
       for(bb=0; bb<(3*z); bb++)
 	  {	    
 	    codeword[(sizeMsg+z) + bb] = cword_temp[bb]%2; //perform modulo 2
@@ -343,7 +348,7 @@ void get_parity(){
 	  }
       //print_codeword();
       
-      
+    
     //-------P5 TO PN-------//
 
     //reset parity array
@@ -374,7 +379,7 @@ void get_parity(){
 		    
 		    //product[j] = codeword[j + m*z] * H[k][m][j][i];
 		     multiply[j] = (temp[j] * H[k][m][i][j] );
-		     //printf("%d ", multiply[j]);
+		     //printf("%d ", j + m*z);
 		     //printf("\nk: %d  m: %d",k,m);
 		  }//j
 
@@ -460,13 +465,14 @@ void get_parity(){
 	  //codeword[i] = codeword_temp[i];
 	}
       
-      
+    
 }//get_parity fx
 
 
-void initialise_codeword(){
+void initialise_codeword(int input[], int codeword[]){
 
   int i, j, k;
+  
 
   for(i=0; i<sizeC; i++)
     {
@@ -475,11 +481,6 @@ void initialise_codeword(){
 
    int sizeMsg = expFactor*column_msg_B;
 
-   /*
-   int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
-   */
-   int input[] = {0,	0,	0,	1,	0,	1,	1,	1,	0,	0,	0,	1,	0,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	0,	0,	0,	0,	0,	0,	1,	1,	0,	0,	0,	1,	0,	0,	1,	0,	0,	0,	0,	0,	1,	1,	1,	0,	0,	0,	1,	0,	0,	0,	1,	1,	1,	0,	1,	0,	1,	0,	1,	0,	0,	1,	1,	0,	1,	1,	0,	0,	0,	0,	1,	1,	1,	1,	1,	0,	1,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	0,	1,	0,	0,	0,	0,	0};
-
 
     //Append message or input bits to codeword array
   for (k=0; k<sizeMsg; k++) //row index of input
@@ -487,13 +488,13 @@ void initialise_codeword(){
       if (k>sizeMsg && k<=sizeC)
 	{
 	  codeword[k] = 0;
-	  codeword_temp[k] = 0;
+	  //codeword_temp[k] = 0;
 	}
       
       else
 	{
 	  codeword[k] = input[k];
-	  codeword_temp[k] = input[k];
+	  //codeword_temp[k] = input[k];
 	}  
     }
 
@@ -628,6 +629,17 @@ void positive_matrix()
 
  int main()
  {
+   int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
+
+   /*
+  int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
+   */
+  
+  /*
+    int input[] = {0,	0,	0,	1,	0,	1,	1,	1,	0,	0,	0,	1,	0,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	0,	0,	0,	0,	0,	0,	1,	1,	0,	0,	0,	1,	0,	0,	1,	0,	0,	0,	0,	0,	1,	1,	1,	0,	0,	0,	1,	0,	0,	0,	1,	1,	1,	0,	1,	0,	1,	0,	1,	0,	0,	1,	1,	0,	1,	1,	0,	0,	0,	0,	1,	1,	1,	1,	1,	0,	1,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	0,	1,	0,	0,	0,	0,	0};
+    */
+
+  int codeword[sizeC];
    
     //Import base matrix from txt file
     FILE* f;
@@ -668,12 +680,13 @@ void positive_matrix()
  	}
      }
    //print_All();   
-   initialise_codeword();
-   //print_codeword();
-   get_parity();
+   initialise_codeword(input, codeword);
+   //print_codeword(codeword);
+   //get_parity();
+   get_parity(input, codeword);
     convert(); //Convert 4D H to 2D h
     //print_codeword();
-    //syndrome(); //To check for valid codeword
+    syndrome(codeword); //To check for valid codeword
 
    
  }
