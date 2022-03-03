@@ -29,7 +29,7 @@ int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
 void syndrome(int codeword[]){
 
   //This section calculates syndrome
-  //If 0, valid
+  //If 0, it is a valid codeword
 
   int column_H = column_B * expFactor;
   int row_H = row_B * expFactor;
@@ -86,11 +86,8 @@ void append_p1(int codeword[]){
   //append p1 to codeword
   for(i=0; i<expFactor; i++)
     {
-      codeword[i+sizeMsg] = parity[i];
-      //codeword_temp[i+sizeMsg] = parity[i];
-      //printf("\n%d    %d",parity[i], codeword[i+sizeMsg]);
-      //printf("\n%d",parity[i]);
- 
+      codeword[i+sizeMsg] = parity[i];      
+      //printf("\n%d",parity[i]); 
     }
   //print_codeword();
 }
@@ -117,18 +114,19 @@ void shifting_p1(int n, int z, int codeword[]){
 }
 
 
-void get_parity(int msgs[], int codeword[]){
+void get_parity(int input[], int codeword[]){
 
   int m, k, i, j, r, b, q, z=expFactor, sum, bb;
-  int product[]={}, prodIM[row_B*z], multiply[z], temp[z], sum_temp[z], input[sizeMsg];
+  int product[]={}, prodIM[row_B*z], multiply[z], temp[z], sum_temp[z];
 
   
-
+  /*
   for (i=0; i<sizeMsg; i++)
     {
       input[i] = msgs[i];
       //printf(" %d",i);
     }
+  */
   
   //-------------------P1------------------//
   
@@ -153,12 +151,11 @@ void get_parity(int msgs[], int codeword[]){
 	      for(j=0; j<z; j++) //First I row... got z bits
 		{
 		  //printf("%d ",m);
-		  //for (int t=0; t<z; t++)
-		  // {
+		  
 		      temp[j] = input[j + m*z];
 		      
 		      //printf("\n %d",  j + m*z);
-		      //}
+		      
 		  //product[j] = input[j + m*z] * H[k][m][i][j];
 		  // product[j] = input[j] * H[k][m][i][j];
 		   //printf(" %d ", input[j]);
@@ -182,33 +179,19 @@ void get_parity(int msgs[], int codeword[]){
 	       //prodIM[i + k*z] = sum;
 	       prodIM[i] = sum;
 	       sum_temp[i] = sum_temp[i] + prodIM[i];
-		for (b=0; b<z; b++)
-		  {
-		    //sum_temp[b] = sum_temp[b] + prodIM[b];
-		    //printf("\n %d",sum_temp[b]);
-		  }
-		
-	        //will have z size array containing IM elements
-	     	//printf("\n %d ",prodIM[i]);
-		//printf("\n %d ",sum_temp[i]);
-	      
+        
+			       	      
 	    }//i
 	  
 	   //Sum parities at every new row in 1st column (for IM)
 	  //At the end, will have parity array with z bits
-	  //  for(r=0; r<z; r++)
-	  // {
-	  //  parity[r] = parity[r] + prodIM[r];
-	       //printf("\npar: %d ",parity[r]);
-	  //printf("\n");
-	  // }
-	    
+	 	    
 	}//k
     }//m
 
    for(int r=0; r<z; r++)
 	{
-	       //parity[r] = parity[r] + prodIM[r];
+	      
 	  //parity[r] = parity[r]%2;
 	   parity[r] = sum_temp[r]%2;
 	   //printf("\n %d  ", parity[r]);
@@ -246,7 +229,6 @@ void get_parity(int msgs[], int codeword[]){
 
       int  cword_temp[(column_B - column_msg_B - 1)*z];
       
-      //m<column_msg_B+(q+1)
     //traverse by row and Hcolumn in codeword (all msg and one p)
       for(q=0; q<3; q++)
 	{
@@ -264,7 +246,7 @@ void get_parity(int msgs[], int codeword[]){
 
 		    temp[j] = codeword[j + m*z];
 		    //printf("\nm:%d k:%d i:%d   %d ",m,k,i,j+m*z);
-		    //product[j] = codeword[j + m*z] * H[k][m][j][i];
+		  
 		     multiply[j] = (temp[j] * H[k][m][i][j] );
 		     //printf("%d ",  H[k][m][i][j]);
 		     //printf("\nm: %d  k: %d i: %d  j: %d",m,k,i,j);
@@ -286,12 +268,7 @@ void get_parity(int msgs[], int codeword[]){
 	    
 	     //Sum parities at every new row in 1st column (for IM)
 	   
-	    //printf("\n m %d \n",m+1);
-	    	 for(r=0; r<z; r++)
-	     {
-	       //parity[r] = parity[r] + prodIM[r];
-	       //printf("\nm: %d k: %d  %d ",m,k,sum_temp[r]);
-	     }
+	    
 		 //printf("\n");
 	  }//k
 
@@ -302,32 +279,12 @@ void get_parity(int msgs[], int codeword[]){
 	    parity[w] = sum_temp[w];
 	    //cword_temp[(sizeMsg+z) + w + q*z] = parity[w];
 	    cword_temp[w+q*z] = parity[w];
-	    //codeword[sizeMsg + q + q*z] = parity[w];
 	    //printf("\nm: %d   %d ",m,w+q*z);
 	    //printf("\nk:%d %d",k, cword_temp[(sizeMsg+z) + w + q*z] );	    	    
 	  }
 
-	//reset parity array before going to new row
-	int y;
-	  for(y=0; y<z; y++)
-	    {
-	      //parity[y]=0;
-	      //prodIM[y]=0;
-	      //sum_temp[y]=0;
-	    }
-	  //q++;
-	  //printf("\n");
-	  //int w;
-
       }//m
 
-      // int w; //append
-      //	for(w=0; w<z; w++)
-      // {
-	    
-	    //codeword_temp[(sizeMsg-1) + (k+1)*w] = (sum_temp[w]);
-	    //printf("\nm: %d   %d ",m,sum_temp[w]);	    
-      //  }
 	
       	int y; //reset
 	  for(y=0; y<z; y++)
@@ -342,7 +299,6 @@ void get_parity(int msgs[], int codeword[]){
       for(bb=0; bb<(3*z); bb++)
 	  {	    
 	    codeword[(sizeMsg+z) + bb] = cword_temp[bb]%2; //perform modulo 2
-	    //codeword_temp[(sizeMsg+z) + bb] = cword_temp[bb]%2;
 	    //printf("\n %d ",codeword[(sizeMsg+z) + bb]);
 	    
 	  }
@@ -359,7 +315,6 @@ void get_parity(int msgs[], int codeword[]){
 
       int cword_temp2[(column_B - column_msg_B - 4)*z]; //fix stash smashing
            
-      //m<column_msg_B+(q+1)
     //traverse by row and Hcolumn in codeword (all msg and one p)
       for(q=0; q<(column_B - column_msg_B - 4); q++)  //< must be from p5 till pn length, this is K-4
 	{
@@ -377,7 +332,6 @@ void get_parity(int msgs[], int codeword[]){
 
 		    temp[j] = codeword[j + m*z];
 		    
-		    //product[j] = codeword[j + m*z] * H[k][m][j][i];
 		     multiply[j] = (temp[j] * H[k][m][i][j] );
 		     //printf("%d ", j + m*z);
 		     //printf("\nk: %d  m: %d",k,m);
@@ -400,11 +354,7 @@ void get_parity(int msgs[], int codeword[]){
 	     //Sum parities at every new row in 1st column (for IM)
 	   
 	    //printf("\n m %d \n",m+1);
-	    	 for(r=0; r<z; r++)
-	     {
-	       //parity[r] = parity[r] + prodIM[r];
-	       //printf("\nm: %d k: %d  %d ",m,k,sum_temp[r]);
-	     }
+	    
 		 //printf("\n");
 	  }//k
 
@@ -413,33 +363,15 @@ void get_parity(int msgs[], int codeword[]){
 	for(w=0; w<z; w++)
 	  {
 	    parity[w] = sum_temp[w];
-	    //cword_temp[(sizeMsg+z) + w + q*z] = parity[w];
 	    cword_temp2[w+q*z] = parity[w];
 	    //printf("\nm: %d   %d ",m,w+q*z);
 	    //printf("\nk:%d %d",k, cword_temp2[w + q*z] );	    	    
 	  }
 
-	//reset parity array before going to new row
-	int y;
-	  for(y=0; y<z; y++)
-	    {
-	      //parity[y]=0;
-	      //prodIM[y]=0;
-	      //sum_temp[y]=0;
-	    }
-	  //q++;
-	  //printf("\n");
-	  //int w;
+
 
       }//m
 
-	  //int w; //append
-	  //for(w=0; w<z; w++)
-	  //{
-	    
-	    //codeword[(sizeMsg-1) + (k+1)*w] = (sum_temp[w]);
-	    //printf("\nm: %d   %d ",m,sum_temp[w]);	    
-	  // }
 	
       	int y; //reset
 	  for(y=0; y<z; y++)
@@ -455,15 +387,10 @@ void get_parity(int msgs[], int codeword[]){
       for(bb=0; bb< (column_B - column_msg_B - 4) * z; bb++)
 	  {	    
 	    codeword[(sizeMsg+4*z) + bb] = cword_temp2[bb]%2; //perform modulo 2
-	    //codeword_temp[(sizeMsg+4*z) + bb] = cword_temp2[bb]%2; //perform modulo 2
 	    //printf("\n %d ",(sizeMsg+4*z) + bb);	    
 	  }
 
 
-      for (i=0; i<sizeC; i++) 
-	{
-	  //codeword[i] = codeword_temp[i];
-	}
       
     
 }//get_parity fx
@@ -629,11 +556,13 @@ void positive_matrix()
 
  int main()
  {
-   int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
-
    /*
-  int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
+   int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
    */
+
+   
+  int input [] = {1,	1,	0,	1,	1,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	1,	1,	1,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	0,	1,	0,	0,	0,	1,	1,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	1,	0,	0,	0,	1,	0,	0,	1,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	1,	1,	1,	0,	1,	0,	0,	0,	0,	1,	0,	1,	0,	1,	0,	1,	1,	1};
+   
   
   /*
     int input[] = {0,	0,	0,	1,	0,	1,	1,	1,	0,	0,	0,	1,	0,	1,	1,	1,	0,	0,	0,	1,	0,	1,	0,	0,	0,	0,	1,	1,	1,	0,	1,	1,	0,	1,	0,	0,	0,	0,	0,	0,	0,	0,	1,	1,	0,	0,	0,	1,	0,	0,	1,	0,	0,	0,	0,	0,	1,	1,	1,	0,	0,	0,	1,	0,	0,	0,	1,	1,	1,	0,	1,	0,	1,	0,	1,	0,	0,	1,	1,	0,	1,	1,	0,	0,	0,	0,	1,	1,	1,	1,	1,	0,	1,	1,	0,	1,	1,	1,	1,	1,	0,	0,	0,	0,	1,	0,	0,	0,	0,	0};
