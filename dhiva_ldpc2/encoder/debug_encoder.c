@@ -22,7 +22,7 @@
  int pK=0;
  int pM=0;
 
-void syndrome(int codeword[]){
+int syndrome(int codeword[]){
 
   //This section calculates the syndrome to check validity of final codeword
   //If syndrome is 0, it is a valid codeword
@@ -53,16 +53,24 @@ void syndrome(int codeword[]){
 
       synd[i] = sum%2;   //perform modulo 2
       //printf("\n%d",synd[i]%2); 
-      if (synd[i] != 0)
-	{
-	  printf("\n\n Invalid Codeword \n\n");
-	}
-      else
-	{
-	  printf("\n\n Valid Codeword \n\n");
-	}
+      // if (synd[i] != 0)
+      //	{
+      //	  //printf("\n\n Invalid Codeword \n\n");
+      //	}
+      // else
+      //{
+      //  //printf("\n\n Valid Codeword \n\n");
+      //}
     
     }
+  int ss=0;
+  for(i=0; i<row_H; i++)
+    {
+      ss+=synd[i];
+    }
+
+  // printf("\n\n%d ",ss);
+  return ss;
 
 }
 
@@ -585,7 +593,13 @@ void positive_matrix()
    //print_codeword(codeword);
    get_parity(input, codeword); //Calculate parity bits
    convert();                   //Convert 4D H to 2D H
-   syndrome(codeword);          //To check for valid codeword
+
+   int check = syndrome(codeword);          //To check for valid codeword
+
+   if (check == 0)
+     {printf("\nValid codeword\n\n");}
+   else
+     {printf("\nInvalid codeword\n\n");}
 
    
  }
