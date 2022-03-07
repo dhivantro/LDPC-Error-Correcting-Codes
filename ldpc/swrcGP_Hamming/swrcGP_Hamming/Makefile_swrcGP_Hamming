@@ -1,0 +1,8 @@
+CC    = gcc
+FLAGS = -O3 -fopenmp -Wno-unused-result
+FLAGS = -g -fopenmp
+ALL:    swrcGP_Hamming clean
+swrcGP_Hamming: swrcGP_Hamming.c swrcGP_Hamming.h ../modules/encoder/GP_HammingEncoder/GP_HammingEncoder.c ../modules/channel/GP_HammingChannel/GP_HammingChannel.c ../modules/decoder/GP_HammingDecoder/GP_HammingDecoder.c ../modules/SWRC.c ../modules/berResult/berResult.c ../modules/encoder/GP_HammingEncoder/GP_HammingEncoder.h ../modules/channel/GP_HammingChannel/GP_HammingChannel.h ../modules/decoder/GP_HammingDecoder/GP_HammingDecoder.h ../modules/SWRC.h ../modules/berResult/berResult.h Makefile_swrcGP_Hamming make
+	$(CC) $(FLAGS) -Wno-unused-result swrcGP_Hamming.c ../modules/encoder/GP_HammingEncoder/GP_HammingEncoder.c ../modules/channel/GP_HammingChannel/GP_HammingChannel.c ../modules/decoder/GP_HammingDecoder/GP_HammingDecoder.c ../modules/SWRC.c ../modules/berResult/berResult.c -lgsl -lgslcblas -lm -o swrcGP_Hamming
+clean:
+	rm -f *.o # *~ 
