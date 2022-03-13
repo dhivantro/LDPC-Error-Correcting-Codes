@@ -9,6 +9,7 @@
 // Comment   : The first-trial (7,4) Hamming encoder for the group project 
 //             team 
 
+#include <stdio.h>
 #include "GP_HammingEncoder.h"
 // Initialize the fields in the module structure
 // Set pointers to NULL (so they can be called with realloc)
@@ -1091,16 +1092,19 @@ void runGP_HammingEncoder (GP_HammingEncoderStruct *GP_HammingEncoder, signalStr
   output   = (uint8_t*) incrementByOneSignal(signal,N_output,0,"GP_HammingEncoder");    // Create a new output vector on end of signal list //allocating memory
   
   // Computation engine :
+  // printf("\n\nIn runSwrcGP_Hamming\n\n");
 
-   printf("\n\nIn runSwrcGP_Hamming\n\n");
-
+  //printf("\n\nin encoderrrrr\n\n"); //debug
+  //sizeC = GP_HammingEncoder->N;
   int codeword[sizeC];
-   
+
     //Import base matrix from txt file
     FILE* f;
     f=fopen("NR_1_2_5.txt", "r");
+    printf("\n\nin encoderrrrr\n\n"); //debug
+    //printf("\nf: %d",f);
     if (!feof(f))
-    {
+    {   
         for (k=0;k<row_B;k++)
         {
             for (j=0;j<column_B;j++)
