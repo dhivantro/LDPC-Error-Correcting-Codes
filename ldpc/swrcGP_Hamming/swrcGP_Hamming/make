@@ -3,7 +3,7 @@
 
 
 vg="valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes"
-make -f Makefile_swrcGP_Hamming && $vg ./swrcGP_Hamming -0 "setParm(*N=340;*K=110);" -r
+make -f Makefile_swrcGP_Hamming && $vg ./swrcGP_Hamming -0 "setParm(*N=340;*K=110);" -1 "setParm(*N=340;*K=110);" -r
 
 
 # Compile the C code and run using valgrind. User must supply needed parameters for running.
