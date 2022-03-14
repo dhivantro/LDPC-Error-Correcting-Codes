@@ -665,12 +665,13 @@ void runSwrcGP_Hamming (swrcGP_HammingStruct *swrcGP_Hamming) {
     //////////////////////////////////
     SWRC_printHeader("1. GP_HammingEncoder");
     runGP_HammingEncoder(&swrcGP_Hamming->GP_HammingEncoder,&swrcGP_Hamming->signal);
-     printAllSignals(&swrcGP_Hamming->signal);exit(-1);
+    //  printAllSignals(&swrcGP_Hamming->signal);exit(-1);
     //////////////////////////////////
     // 2. run the GP_HammingChannel module
     //////////////////////////////////
     SWRC_printHeader("2. GP_HammingChannel");
-    // runGP_HammingChannel(&swrcGP_Hamming->GP_HammingChannel,&swrcGP_Hamming->signal);
+    runGP_HammingChannel(&swrcGP_Hamming->GP_HammingChannel,&swrcGP_Hamming->signal);
+    // printAllSignals(&swrcGP_Hamming->signal);exit(-1);
     //////////////////////////////////
     // 3. run the GP_HammingDecoder module
     //////////////////////////////////
