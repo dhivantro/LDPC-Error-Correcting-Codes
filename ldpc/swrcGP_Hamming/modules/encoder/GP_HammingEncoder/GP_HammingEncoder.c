@@ -544,7 +544,7 @@ void initBerResultStructGP_HammingEncoder (GP_HammingEncoderStruct *GP_HammingEn
 #define expFactor 5
 #define column_msg_B 22             //size of msg parts in B matrix
 #define sizeC (column_B*expFactor)  //size of codeword
-
+//int sizeC = GP_HammingEncoder->N;
  int B[row_B][column_B];
  int H[row_B][column_B][expFactor][expFactor];
  int H_2D [row_B*expFactor] [column_B*expFactor];
@@ -924,23 +924,16 @@ void initialise_codeword(uint8_t *input, int codeword[]){
       codeword[i] = 0;
     }
 
-   int sizeMsg = expFactor*column_msg_B;
-
+  int sizeMsg = expFactor*column_msg_B;
+  //int sizeMsg = GP_HammingEncoder->K; 
 
     //Append message or input bits to codeword array
-  for (k=0; k<sizeMsg; k++) //row index of input
-    {
-      if (k>sizeMsg && k<=sizeC)
-	{
-	  codeword[k] = 0;
-	  //codeword_temp[k] = 0;
-	}
-      
-      else
-	{
+   for (k=0; k<110; k++) //row index of input
+    {    	
+      //printf("\n%d ",k);
 	  codeword[k] = input[k];
 	  //codeword_temp[k] = input[k];
-	}  
+	 
     }
 
   // get_parity(input);
@@ -1095,7 +1088,7 @@ void runGP_HammingEncoder (GP_HammingEncoderStruct *GP_HammingEncoder, signalStr
   // printf("\n\nIn runSwrcGP_Hamming\n\n");
 
   //printf("\n\nin encoderrrrr\n\n"); //debug
-  //sizeC = GP_HammingEncoder->N;
+  //sizeC = N_output;
   int codeword[sizeC];
 
     //Import base matrix from txt file
@@ -1143,7 +1136,7 @@ void runGP_HammingEncoder (GP_HammingEncoderStruct *GP_HammingEncoder, signalStr
    //print_codeword(codeword);
    get_parity(input, codeword); //Calculate parity bits
    convert();                   //Convert 4D H to 2D H
-   print_codeword(codeword);
+   //print_codeword(codeword);
 
    int check = syndrome(codeword);          //To check for valid codeword
 
@@ -1158,7 +1151,11 @@ void runGP_HammingEncoder (GP_HammingEncoderStruct *GP_HammingEncoder, signalStr
        printf("\n\nCodeword is Invalid\n\n\n");
      }
 
-
+   //Codeword=output
+   for(i=0; i<N_output; i++)
+     {
+       output[i] = codeword[i];
+     }
    
 
   //for debugging purposes
