@@ -928,7 +928,7 @@ void initialise_codeword(uint8_t *input, int codeword[]){
   //int sizeMsg = GP_HammingEncoder->K; 
 
     //Append message or input bits to codeword array
-   for (k=0; k<110; k++) //row index of input
+   for (k=0; k<sizeMsg; k++) //row index of input
     {    	
       //printf("\n%d ",k);
 	  codeword[k] = input[k];
