@@ -546,11 +546,12 @@ void runGP_HammingChannel (GP_HammingChannelStruct *GP_HammingChannel, signalStr
   //output[0]=1;
   for(i=0; i<N_output; i++){
     output[i]=input[i];
+    //printf("\n%d",input[i]);
   }
 
-  printf("\n\n\n %d \n\n\n ",  GP_HammingChannel->N);
+  //printf("\n\n\n %d \n\n\n ",  GP_HammingChannel->N);
 
-  // printAllSignals(signal); exit(-1);
+   printAllSignals(signal); exit(-1);
   
   // Save the time for the computation engine
   endTime = clock();
