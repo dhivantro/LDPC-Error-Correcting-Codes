@@ -5,5 +5,5 @@ Note to self:
 Ignore other files first (Backbone code taken from Hamming 74 for now)
 
 Currently: 
-Fixing codeword generation (parity bits) in debug_encoder.c  [DONE]
-Adding syndrome calculation
+-Merging with backbone code
+-Alist conversion (from Radford Neal)
