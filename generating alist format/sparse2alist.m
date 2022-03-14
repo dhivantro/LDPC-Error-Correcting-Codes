@@ -1,6 +1,7 @@
 %Code is from xiaoshaoning
 %<https://github.com/xiaoshaoning/5g-ldpc/blob/master/alist_generate.m>
-
+%The H_test matrix is used to test this code
+%The testingn is done by comparing the alist output here with David Mackay's alist (http://www.inference.org.uk/mackay/codes/alist.html)
 
 load H_matrix.txt
 H = H_matrix;
