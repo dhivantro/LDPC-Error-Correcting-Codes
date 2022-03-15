@@ -193,8 +193,9 @@ void row_operation(){
 	      second = first;
 	      //printf("\n sec: %f ",second);
 	      first = temp[i][j]; //update first to current element
-	      //printf("\n col [%d][%d]   %f     %f",i,j,first,second);
-	      //printf("\nfirst: %f",first);
+	      //printf("\n hfiueruifecond");
+	      //printf("\nj:%d first: %f",j,first);
+	      //printf("\nj:%d sec: %f",j,second);
 	      
 	    }//1
 	  
@@ -202,27 +203,38 @@ void row_operation(){
 	    {	     
 	      //if current element in between first and second
 	    
-		  second = temp[i][j];
+		second = temp[i][j];
 
 	      //printf("\n col [%d][%d]   %f     %f",i,j,first,second);
-	      //printf("\nfirst: %f",first);
+	      //printf("\nsec: %f",second);
+		//printf("\nj:%d sec: %f fir:%f",j,second,first);
 		  
 	    }//2
 
-	  else if (temp[i][j] == first)
+	  else if (temp[i][j] == first && second == INT_MAX )
 	    {
 	      second = first;
-	      //printf("\nfirst: %f",first);
+	      //printf("\nj:%d first: %f",j,first);
+	      //printf("\nj:%d sec: %f",j,second);
+	      //first = temp[i][j];
 	    }//3
 
 	  else if (temp[i][j] < first && L[i][j]!=0.0 )
 	    {
 	      second = temp[i][j];
-	    }//4	   
+	      //printf("\nj:%d sec: %f",j,second);
+	    }//4
+
+	  else if (temp[i][j] < second && L[i][j]!= 0.0)
+	    {
+	      second = temp[i][j];
+	      //printf("\nj:%d sec: %f",j,second);
+	    }
 	   
 	  }//if H!=0
 	 
 	}
+      
       printf("\n\nRow %d: smallest: %f \t2nd smallest: %f ",i,first,second);
       Adjust_Row_Element(first, second, i);
       first = second = INT_MAX; //reset values
@@ -249,8 +261,8 @@ void L_initial(){
  
   //double input[] = {0.2,-0.3,1.2,-0.5,0.8};
   //double input[] = {0.0,0.0,0.0,0.0,0.0};
-  //double input[] = {1,0,1,0,1};
-  double input[] = {1,1,1,1,1};
+  double input[] = {0,1,1,1,0};
+  //double input[] = {1,1,1,1,1};
 
   //This part gets H 
 
