@@ -31,6 +31,12 @@ double sign[row_L][column_L];
 
 int i, j, k;
 
+int H[4][5] = {
+		{1,1,1,0,1},
+		{0,1,1,1,0},
+		{1,1,0,1,0},
+		{1,0,1,0,1}};
+  
 
 void update_parity_L(float n, int i){
 
@@ -171,27 +177,51 @@ void row_operation(){
       for(j=0; j<column_L; j++)
 	{
 
-	  if (temp[i][j] == 0.0)
-	    {
+	  // if (temp[i][j] == 0.0 )
+	  //  {
 	      //j++; //if comment out this part, it can work
-	    }	  
+	      //second = first;
+	      //first = temp[i][j];
+	      //printf("\nfirst: %f",first);
+	      
+	  //  }
+	  if (H[i][j] != 0.0){
 	  
-	  else if (temp[i][j] < first)
+	   if (temp[i][j] < first )
 	    {
 	      //If current element smaller than first, update first and second
-	      second = first; 
+	      second = first;
+	      //printf("\n sec: %f ",second);
 	      first = temp[i][j]; //update first to current element
 	      //printf("\n col [%d][%d]   %f     %f",i,j,first,second);
-	    }
+	      //printf("\nfirst: %f",first);
+	      
+	    }//1
 	  
 	  else if (temp[i][j] < second && temp[i][j] != first )
 	    {	     
 	      //if current element in between first and second
-	      second = temp[i][j];
-	      //printf("\n col [%d][%d]   %f     %f",i,j,first,second);
-	    }	 
-	  //printf("\n temp[%d][%d]",i,j);
+	    
+		  second = temp[i][j];
 
+	      //printf("\n col [%d][%d]   %f     %f",i,j,first,second);
+	      //printf("\nfirst: %f",first);
+		  
+	    }//2
+
+	  else if (temp[i][j] == first)
+	    {
+	      second = first;
+	      //printf("\nfirst: %f",first);
+	    }//3
+
+	  else if (temp[i][j] < first && L[i][j]!=0.0 )
+	    {
+	      second = temp[i][j];
+	    }//4	   
+	   
+	  }//if H!=0
+	 
 	}
       printf("\n\nRow %d: smallest: %f \t2nd smallest: %f ",i,first,second);
       Adjust_Row_Element(first, second, i);
@@ -216,13 +246,11 @@ void L_initial(){
 
   int i, j ,k;
 
- int H[4][5] = {
-		{1,1,1,0,1},
-		{0,1,1,1,0},
-		{1,1,0,1,0},
-		{1,0,1,0,1}};
-  
- double input[] = {0.2,-0.3,1.2,-0.5,0.8};
+ 
+  //double input[] = {0.2,-0.3,1.2,-0.5,0.8};
+  //double input[] = {0.0,0.0,0.0,0.0,0.0};
+  //double input[] = {1,0,1,0,1};
+  double input[] = {1,1,1,1,1};
 
   //This part gets H 
 
