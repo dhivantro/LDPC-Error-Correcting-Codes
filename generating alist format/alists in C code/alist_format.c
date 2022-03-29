@@ -6,15 +6,17 @@
 //codeword size: row_B * expFactor
 
 int H [row_B*expFactor] [column_B*expFactor];
+//int Hnew[][]={};
 
 void pchk2alist();
+void alist2pchk();
 
 int main(){
 
  
 
-  pchk2alist();
-  
+  //pchk2alist();
+  alist2pchk();
  
   
 }
@@ -40,19 +42,6 @@ void pchk2alist(){
     }
    fclose(f);
    
-   /*
-   //Printing H matrix
-   for (i=0;i< (row_B*expFactor) ;i++)
-        {
-	  for (j=0;j< (column_B*expFactor) ;j++)
-            {
-               printf("%d",H[i][j]);
-               
-            }
-	  printf("\n");
-
-	}
-   */
 
    //Write size of H matrix
    FILE * file;
@@ -137,6 +126,38 @@ void pchk2alist(){
 
      fprintf(file, "\n");
 
+     //Find max number of ones in column
+     int num_c=0, num_r=0;
+     
+     for (i=0; i< (1); i++)
+       {
+	 for (j=0; j < (column_B*expFactor); j++)
+	   {
+	     if (H[i][j] != 0)
+	       {			        
+		 num_c+=1;
+	       }
+	   
+		
+	   }
+	 //printf("%d ",num);
+       }
+
+     for (i=0; i< (1); i++)
+       {
+	 for (j=0; j < (row_B*expFactor); j++)
+	   {
+	     if (H[j][i] != 0)
+	       {			        
+		 num_r+=1;
+	       }
+	   
+		
+	   }
+	 //printf("\n%d\n ",num_r);
+       }
+
+	 
      //Writing column index of non-zero elements in each row
      int pos[]={}, pos_temp[]={0};
      int x=0;
@@ -147,9 +168,10 @@ void pchk2alist(){
 	     if (H[i][j] != 0)
 	       {
 		 pos[x] = j+1;
-		 pos_temp[x] = pos[x];
+		 //pos_temp[x] = pos[x];
 		 //printf(" %d",pos[x]);
 		 fprintf(file, "%d ", pos[x]);
+		 //num+=1;
 	       }
 	   
 		 //printf("%d ",pos_temp[0]);
@@ -179,5 +201,94 @@ void pchk2alist(){
 	 fprintf(file, "\n");
        }
      
-     
+     fclose(file);
+}
+
+void alist2pchk(){
+
+  int rowH, columnH, maxinrow, junk;
+ 
+  int i, j;
+  
+   FILE * f;
+   f = fopen ("1_2_5.alist", "r+");
+
+   fscanf(f, "%d",&rowH);
+   fscanf(f, "%d",&columnH);
+   int Hnew[rowH][columnH];
+
+   fscanf(f, "%d",&maxinrow);
+   fscanf(f, "%d",&junk);
+
+
+   //Number of 1s in each row
+   int numbers[rowH], nummax[rowH];;
+
+   for (i=0; i<rowH; i++)
+     {
+       fscanf(f, "%d",&numbers[i]);
+       //printf("\n%d ",numbers[i]);
+     }
+
+   //For rows in alist
+   for(i=0; i<rowH; i++)
+     {
+       nummax[i] = maxinrow;
+     }
+
+   int junk2[columnH];
+    for (i=0; i<columnH; i++)
+     {
+       fscanf(f, "%d",&junk2[i]);
+       //printf("\n%d ",junk2[i]);
+     }
+
+    int position[rowH][maxinrow];
+    for (i=0; i<rowH; i++)  //initialise as all zeros
+      {
+	for (j=0; j<maxinrow; j++)
+	  {
+	    position[i][j] = 0;
+	  }
+      }
+
+    //scan every row in alist H, in each row: put each element in each column
+    //NEED TO DEBUG
+    for (i=0; i<rowH; i++)
+      {
+	for (j=0; j<maxinrow; j++)
+	  {
+	    fscanf(f, "%d",&position[i][j]);
+	    //printf("%d ",position[i][j]);
+	  }
+	//printf("\n");
+      }
+
+    //Sum numbers array
+    int sum=0;
+    for (i=0; i<rowH; i++)
+      {
+	sum+=numbers[i];
+      }
+    //printf("%d ",sum);
+
+    int ii[sum], jj[sum];
+
+    for (i=0; i<sum; i++)
+      {
+	ii[i] = 0;
+	jj[i] = 0;
+      }
+    
+    int k = 0;
+    for (i=0; i<rowH; i++)
+      {
+	for (j=0; j<(numbers[i]); j++)
+	  {
+	    jj[k] = i;
+	    ii[k] = position[i][j];
+	    k+=1;
+	  }
+      }
+    
 }
