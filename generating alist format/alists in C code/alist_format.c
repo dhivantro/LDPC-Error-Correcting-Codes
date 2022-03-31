@@ -206,7 +206,7 @@ void pchk2alist(){
 
 void alist2pchk(){
 
-  int rowH, columnH, maxinrow, junk;
+  int rowH, columnH, maxinrow, junk, maxincol;
  
   int i, j;
   
@@ -217,16 +217,16 @@ void alist2pchk(){
    fscanf(f, "%d",&columnH);
    int Hnew[rowH][columnH];
 
-   fscanf(f, "%d",&maxinrow);
-   fscanf(f, "%d",&junk);
+   fscanf(f, "%d",&maxinrow); //19
+   fscanf(f, "%d",&maxincol); //30
 
 
    //Number of 1s in each row
-   int numbers[rowH], nummax[rowH];;
+   int numbers_row[rowH], nummax[rowH];;
 
    for (i=0; i<rowH; i++)
      {
-       fscanf(f, "%d",&numbers[i]);
+       fscanf(f, "%d",&numbers_row[i]);
        //printf("\n%d ",numbers[i]);
      }
 
@@ -236,10 +236,10 @@ void alist2pchk(){
        nummax[i] = maxinrow;
      }
 
-   int junk2[columnH];
+   int numbers_col[columnH];
     for (i=0; i<columnH; i++)
      {
-       fscanf(f, "%d",&junk2[i]);
+       fscanf(f, "%d",&numbers_col[i]);
        //printf("\n%d ",junk2[i]);
      }
 
@@ -256,19 +256,19 @@ void alist2pchk(){
     //NEED TO DEBUG
     for (i=0; i<rowH; i++)
       {
-	for (j=0; j<maxinrow; j++)
+	for (j=0; j<numbers_row[i]; j++)
 	  {
 	    fscanf(f, "%d",&position[i][j]);
-	    //printf("%d ",position[i][j]);
+	    printf("%d ",position[i][j]);
 	  }
-	//printf("\n");
+	printf("\n");
       }
 
     //Sum numbers array
     int sum=0;
     for (i=0; i<rowH; i++)
       {
-	sum+=numbers[i];
+	sum+=numbers_row[i];
       }
     //printf("%d ",sum);
 
@@ -283,7 +283,7 @@ void alist2pchk(){
     int k = 0;
     for (i=0; i<rowH; i++)
       {
-	for (j=0; j<(numbers[i]); j++)
+	for (j=0; j<(numbers_row[i]); j++)
 	  {
 	    jj[k] = i;
 	    ii[k] = position[i][j];
