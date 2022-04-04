@@ -253,15 +253,14 @@ void alist2pchk(){
       }
 
     //scan every row in alist H, in each row: put each element in each column
-    //NEED TO DEBUG
     for (i=0; i<rowH; i++)
       {
 	for (j=0; j<numbers_row[i]; j++)
 	  {
 	    fscanf(f, "%d",&position[i][j]);
-	    printf("%d ",position[i][j]);
+	    //printf("%d ",position[i][j]);
 	  }
-	printf("\n");
+	//printf("\n");
       }
 
     //Sum numbers array
@@ -289,6 +288,45 @@ void alist2pchk(){
 	    ii[k] = position[i][j];
 	    k+=1;
 	  }
+      }
+
+    //Initialise all 0 H
+    for (i = 0; i<rowH; i++)
+      {
+	for (j=0; j<columnH; j++)
+	  {
+	    
+	     H[i][j]=0;
+	      
+	  }
+      }
+
+   
+    FILE * p;
+    p = fopen ("PCHK", "w+");
+
+     for (i = 0; i<rowH; i++)
+      {
+	for (j=0; j<numbers_row[i]; j++)
+	  {
+	    //printf("%d ",position[i][j]);
+	    H [i] [(position[i][j])]=1;
+	    	    	      
+	  }
+	//printf("\n");
+      }
+
+     for (i = 0; i<rowH; i++)
+      {
+	for (j=0; j<columnH; j++)
+	  {
+	    
+	    printf("%d", H[i][j]);
+	    fprintf(p,"%d", H [i][j]);
+	      
+	  }
+	printf("\n");
+	fprintf(p,"\n");
       }
     
 }
