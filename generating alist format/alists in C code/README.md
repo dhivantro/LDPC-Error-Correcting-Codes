@@ -7,8 +7,8 @@ A type of file format that is not readable by human but is readable by computer.
 
 # How to run the codes
 **In alist_format.c in main:**
-1. To read sparse H and convert it into alist format:  Uncomment pchk2alist();
-2. To read alist file format and convert it into sparse H:  Uncomment  alist2pchk();
+1. To read sparse H and convert it into alist format:       *Uncomment pchk2alist();*
+2. To read alist file format and convert it into sparse H:  *Uncomment  alist2pchk();*
 
 # How to view code results
  1. **'1_2_5.alist'** is the results of generating an alist format from the sparse H.
