@@ -36,6 +36,7 @@ typedef struct swrcGP_HammingStruct {
   int K;                              // Length of user word before coding 
   int M;                              // Number of parity check bits 
   int N;                              // Length of code word after coding
+  double R;
   int numberOfFrames;                 // Number of frames executed in the simulation
   int numberOfFrameErrors;            // Number of frame errors found in the simulation
   int minNumberOfFrames;              // minimum number of frames before terminate simulation

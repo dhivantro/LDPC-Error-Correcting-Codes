@@ -1,2 +1,6 @@
-# runTime     N    M    K #Frames #FramesErr      #Bits #BitErr        FER        BER           StartSimDateTime             EndSimDateTime                                  CPID 
-        0   340  230  110       0          0          0       0 0.00000000 0.00000000   Tue Mar  8 00:31:15 2022   Tue Mar  8 00:31:15 2022                          *dhiva_13494 
+# runTime     N    M    K #Frames #FramesErr      #Bits #BitErr        FER        BER SNR           StartSimDateTime             EndSimDateTime                                  CPID 
+
+     3600   340  230  110     271        266      29810    1673 0.98154982 0.05612211 4.0   Wed Mar 23 00:35:10 2022   Wed Mar 23 00:35:10 2022                           dhiva_95584 
+     7203   340  230  110     598        586      65780    3761 0.97993311 0.05717543 4.0   Wed Mar 23 00:35:10 2022   Wed Mar 23 01:35:10 2022                           dhiva_95584 
+    10806   340  230  110     936        920     102960    5987 0.98290598 0.05814880 4.0   Wed Mar 23 00:35:10 2022   Wed Mar 23 02:35:13 2022                           dhiva_95584 
+    11361   340  230  110    1000        983     110000    6421 0.98300000 0.05837273 4.0   Wed Mar 23 00:35:10 2022   Wed Mar 23 03:44:31 2022                          *dhiva_95584 

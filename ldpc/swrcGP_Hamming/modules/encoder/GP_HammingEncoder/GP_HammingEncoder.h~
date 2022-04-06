@@ -184,7 +184,4 @@ void initBerResultStructGP_HammingEncoder(GP_HammingEncoderStruct *GP_HammingEnc
 // the module is in this function.
 void runGP_HammingEncoder(GP_HammingEncoderStruct *GP_HammingEncoder, signalStruct *signal);
 
-
-  
-  
 #endif

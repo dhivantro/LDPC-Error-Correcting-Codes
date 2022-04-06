@@ -118,6 +118,7 @@ void initSwrcGP_HammingStruct (swrcGP_HammingStruct *swrcGP_Hamming) {
   swrcGP_Hamming->K                   = 0;
   swrcGP_Hamming->M                   = 0;
   swrcGP_Hamming->N                   = 0;
+  swrcGP_Hamming->R                   = 0;
   swrcGP_Hamming->numberOfFrames      = 0;
   swrcGP_Hamming->numberOfFrameErrors = 0;
   swrcGP_Hamming->minNumberOfFrames   = 1000;
@@ -151,6 +152,7 @@ void freeSwrcGP_HammingStruct (swrcGP_HammingStruct *swrcGP_Hamming) {
   swrcGP_Hamming->K             =0;
   swrcGP_Hamming->M             =0;
   swrcGP_Hamming->N             =0;
+  swrcGP_Hamming->R             =0;
   swrcGP_Hamming->numberOfFrames=0;
   swrcGP_Hamming->numberOfFrameErrors=0;
   swrcGP_Hamming->minNumberOfFrames=1000;
@@ -188,7 +190,7 @@ void printSwrcGP_HammingStruct (swrcGP_HammingStruct *swrcGP_Hamming, char *name
     printf("%s  char                 %s->CPID[99]=%c\n",preString,name,swrcGP_Hamming->CPID[99]);      // Print char CPID[99]
     printf("%s  int                  %s->dumpEvery=%d\n",preString,name,swrcGP_Hamming->dumpEvery);    // Print int dumpEvery
 // Fields for running the simulation
-    printf("%s  int                  %s->K=%d\n",preString,name,swrcGP_Hamming->K);                    // Print int K
+    printf("%s  int                  %s->K=%d\n",preString,name,swrcGP_Hamming->K); 
     printf("%s  int                  %s->M=%d\n",preString,name,swrcGP_Hamming->M);                    // Print int M
     printf("%s  int                  %s->N=%d\n",preString,name,swrcGP_Hamming->N);                    // Print int N
     printf("%s  int                  %s->numberOfFrames=%d\n",preString,name,swrcGP_Hamming->numberOfFrames); // Print int numberOfFrames
@@ -381,12 +383,12 @@ void setParmSwrcGP_HammingStruct (swrcGP_HammingStruct *swrcGP_Hamming, char *ar
    if (SWRC_readSingleArgumentFromString(arg,"N",&swrcGP_Hamming->N,"%d")==1) {
      printf("N=%d\n",swrcGP_Hamming->N);
    }
-  // if (SWRC_readSingleArgumentFromString(arg,"numberOfFrames",&swrcGP_Hamming->numberOfFrames,"%d")==1) {
-  //   printf("numberOfFrames=%d\n",swrcGP_Hamming->numberOfFrames);
-  // }
-  // if (SWRC_readSingleArgumentFromString(arg,"numberOfFrameErrors",&swrcGP_Hamming->numberOfFrameErrors,"%d")==1) {
-  //   printf("numberOfFrameErrors=%d\n",swrcGP_Hamming->numberOfFrameErrors);
-  // }
+  if (SWRC_readSingleArgumentFromString(arg,"numberOfFrames",&swrcGP_Hamming->numberOfFrames,"%d")==1) {
+  printf("numberOfFrames=%d\n",swrcGP_Hamming->numberOfFrames);
+   }
+  if (SWRC_readSingleArgumentFromString(arg,"numberOfFrameErrors",&swrcGP_Hamming->numberOfFrameErrors,"%d")==1) {
+  printf("numberOfFrameErrors=%d\n",swrcGP_Hamming->numberOfFrameErrors);
+  }
    if (SWRC_readSingleArgumentFromString(arg,"minNumberOfFrames",&swrcGP_Hamming->minNumberOfFrames,"%d")==1) {
      printf("minNumberOfFrames=%d\n",swrcGP_Hamming->minNumberOfFrames);
    }
@@ -489,7 +491,7 @@ int checkParametersSwrcGP_Hamming (swrcGP_HammingStruct *swrcGP_Hamming) {
   if (swrcGP_Hamming->M==0) {output++; printf("swrcGP_Hamming->M needed, but not set\n");}
   if (swrcGP_Hamming->K==0) {output++; printf("swrcGP_Hamming->K needed, but not set\n");}
   if (swrcGP_Hamming->N==0) {output++; printf("swrcGP_Hamming->N needed, but not set\n");}
-  if (swrcGP_Hamming->N<swrcGP_Hamming->K || swrcGP_Hamming->N<swrcGP_Hamming->M) {output++; printf("N=%d must be bigger than K=%d and M=%d, but not set\n",swrcGP_Hamming->N,swrcGP_Hamming->K,swrcGP_Hamming->M);}  //Calculating M from N and K
+  if (swrcGP_Hamming->N<swrcGP_Hamming->K || swrcGP_Hamming->N<swrcGP_Hamming->M) {output++; printf("N=%d must be bigger than K=%d and M=%d, but not set\n",swrcGP_Hamming->N,swrcGP_Hamming->K,swrcGP_Hamming->M);}
   if (output==0) printf("All parameters check ok\n"); else printf("swrcGP_Hamming CheckParameters: %d parameters are not properly set\n",output);
   return(output);
 }
@@ -497,15 +499,26 @@ int checkParametersSwrcGP_Hamming (swrcGP_HammingStruct *swrcGP_Hamming) {
 // Precomputation done just prior to the main for loop
 // iterating the BER/FER are put into this subroutine
 void precompSwrcGP_Hamming (swrcGP_HammingStruct *swrcGP_Hamming) {
+  swrcGP_Hamming->M=swrcGP_Hamming->N-swrcGP_Hamming->K;
+
+  // //Encoder
+  //swrcGP_Hamming->GP_HammingEncoder.N=swrcGP_Hamming->N;
+  //swrcGP_Hamming->GP_HammingEncoder.K=swrcGP_Hamming->K;
+  //swrcGP_Hamming->GP_HammingEncoder.M=swrcGP_Hamming->M;
+
+  //Channel
+  swrcGP_Hamming->R=(double) swrcGP_Hamming->K/swrcGP_Hamming->N;
+  swrcGP_Hamming->GP_HammingChannel.N=swrcGP_Hamming->N;
+  swrcGP_Hamming->GP_HammingChannel.R=swrcGP_Hamming->R;
+  
+  // //Decoder
+  //swrcGP_Hamming->GP_HammingDecoder.N=swrcGP_Hamming->N;
+  //swrcGP_Hamming->GP_HammingDecoder.K=swrcGP_Hamming->K;
+  //swrcGP_Hamming->GP_HammingDecoder.M=swrcGP_Hamming->M;
+  
   time(&swrcGP_Hamming->startTime);
   time(&swrcGP_Hamming->endTime);
   strncpy(swrcGP_Hamming->startTimeString,ctime(&swrcGP_Hamming->startTime),24);
-  
-  //////////////////////////////////////////////////////////////////////////////////////////////
-  swrcGP_Hamming->M=swrcGP_Hamming->N-swrcGP_Hamming->K;
-  ///////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////
-  swrcGP_Hamming->GP_HammingChannel.N = swrcGP_Hamming->N;
 }
 
 // postComputation, such as freeing up any memory, done after
@@ -569,7 +582,6 @@ void trainSwrcGP_Hamming (swrcGP_HammingStruct *swrcGP_Hamming) {
     SWRC_printHeader("3. GP_HammingDecoder");
     if (trainGP_HammingDecoder(&swrcGP_Hamming->GP_HammingDecoder,&swrcGP_Hamming->signal)==0)
       {freeSignalStruct(&swrcGP_Hamming->signal);continue;}
-    //printAllSignals(&swrcGP_Hamming->signal);//exit(-1);
     freeSignalStruct(&swrcGP_Hamming->signal);
   }
   posttrainGP_HammingEncoder(&swrcGP_Hamming->GP_HammingEncoder);
@@ -586,12 +598,12 @@ void countBERSwrcGP_Hamming (swrcGP_HammingStruct *swrcGP_Hamming,int obi, int d
   uint8_t *original, *detected;
   uint8_t frameError=0;
   swrcGP_Hamming->numberOfFrames++;
-  swrcGP_Hamming->numberOfBits+=swrcGP_Hamming->N;
+  swrcGP_Hamming->numberOfBits+=swrcGP_Hamming->K;
   original = (uint8_t*) swrcGP_Hamming->signal.x[obi];
   detected = (uint8_t*) swrcGP_Hamming->signal.x[dbi];
-  //for (i=0;i<swrcGP_Hamming->N;i++) printf("%d",original[i]);printf("\n");
-  //for (i=0;i<swrcGP_Hamming->N;i++) printf("%d",detected[i]);printf("\n");
-  for (i=0;i<swrcGP_Hamming->N;i++) {
+  for (i=0;i<swrcGP_Hamming->K;i++) printf("%d",original[i]);printf("\n");
+  for (i=0;i<swrcGP_Hamming->K;i++) printf("%d",detected[i]);printf("\n");
+  for (i=0;i<swrcGP_Hamming->K;i++) {
     if (original[i]!=detected[i]) {
       if (frameError==0) {
 	swrcGP_Hamming->numberOfFrameErrors++;
@@ -659,30 +671,34 @@ void runSwrcGP_Hamming (swrcGP_HammingStruct *swrcGP_Hamming) {
     //////////////////////////////////
     SWRC_printHeader("0. generatePseudoRandomUserBitsSignal");
     generatePseudoRandomUserBitsSignal(&swrcGP_Hamming->signal,swrcGP_Hamming->K);
-    //  printAllSignals(&swrcGP_Hamming->signal);exit(-1);
+    //printAllSignals(&swrcGP_Hamming->signal);
+    //exit(-1);
     //////////////////////////////////
     // 1. run the GP_HammingEncoder module
     //////////////////////////////////
     SWRC_printHeader("1. GP_HammingEncoder");
     runGP_HammingEncoder(&swrcGP_Hamming->GP_HammingEncoder,&swrcGP_Hamming->signal);
-    //  printAllSignals(&swrcGP_Hamming->signal);exit(-1);
+    //printAllSignals(&swrcGP_Hamming->signal);exit(-1);
     //////////////////////////////////
     // 2. run the GP_HammingChannel module
     //////////////////////////////////
     SWRC_printHeader("2. GP_HammingChannel");
     runGP_HammingChannel(&swrcGP_Hamming->GP_HammingChannel,&swrcGP_Hamming->signal);
-    // printAllSignals(&swrcGP_Hamming->signal);exit(-1);
+    //printAllSignals(&swrcGP_Hamming->signal);//exit(-1);
+    
     //////////////////////////////////
     // 3. run the GP_HammingDecoder module
     //////////////////////////////////
     SWRC_printHeader("3. GP_HammingDecoder");
-    // runGP_HammingDecoder(&swrcGP_Hamming->GP_HammingDecoder,&swrcGP_Hamming->signal);
-    //printAllSignals(&swrcGP_Hamming->signal);//exit(-1);
+    runGP_HammingDecoder(&swrcGP_Hamming->GP_HammingDecoder,&swrcGP_Hamming->signal);
+    //printAllSignals(&swrcGP_Hamming->signal);exit(-1);
+    
     //////////////////////////////////
     // 4. Count BER
     //////////////////////////////////
     SWRC_printHeader("4. Count BER");
-    // countBERSwrcGP_Hamming(swrcGP_Hamming,0,4); // Count the bit/frame errors. "1" and "5" are the indices of the 2 signals being compared and are hard-coded. User must set these values appropriately for their simulation.
+    countBERSwrcGP_Hamming(swrcGP_Hamming,0,3);
+    // Count the bit/frame errors. "1" and "5" are the indices of the 2 signals being compared and are hard-coded. User must set these values appropriately for their simulation.
     postcompSwrcGP_Hamming(swrcGP_Hamming,' '); // ' ' is a flag indicating this simulation is still ongoing
     saveBerResultFile(&berResult,&swrcGP_Hamming->startTime,&swrcGP_Hamming->endTime,&swrcGP_Hamming->runTime,swrcGP_Hamming->dumpEvery); // Try to save berResult
     freeSignalStruct(&swrcGP_Hamming->signal);
@@ -691,7 +707,7 @@ void runSwrcGP_Hamming (swrcGP_HammingStruct *swrcGP_Hamming) {
   postcompGP_HammingChannel(&swrcGP_Hamming->GP_HammingChannel,'*');
   postcompGP_HammingDecoder(&swrcGP_Hamming->GP_HammingDecoder,'*');
   postcompSwrcGP_Hamming(swrcGP_Hamming,'*'); // '*' is a flag indicating this simulation is finished
-   saveBerResultFile(&berResult,&swrcGP_Hamming->startTime,&swrcGP_Hamming->endTime,&swrcGP_Hamming->runTime,0); //force save of berResult.
+  saveBerResultFile(&berResult,&swrcGP_Hamming->startTime,&swrcGP_Hamming->endTime,&swrcGP_Hamming->runTime,0); //force save of berResult.
   freeBerResultStruct(&berResult);	
 }
 

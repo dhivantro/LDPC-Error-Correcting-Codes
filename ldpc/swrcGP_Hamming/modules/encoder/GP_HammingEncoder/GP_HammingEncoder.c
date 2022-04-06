@@ -9,15 +9,9 @@
 // Comment   : The first-trial (7,4) Hamming encoder for the group project 
 //             team 
 
-#include <stdio.h>
 #include "GP_HammingEncoder.h"
 // Initialize the fields in the module structure
 // Set pointers to NULL (so they can be called with realloc)
-
-//GP_HammingEncoderStruct GP_HammingEncoder;
-
-//initGP_HammingEncoderStruct(GP_HammingEncoderStruct *GP_HammingEncoder);
-
 // Initialize the parameters to sane start-up values.
 void initGP_HammingEncoderStruct (GP_HammingEncoderStruct *GP_HammingEncoder) {
 // Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
@@ -544,21 +538,22 @@ void initBerResultStructGP_HammingEncoder (GP_HammingEncoderStruct *GP_HammingEn
 #define expFactor 5
 #define column_msg_B 22             //size of msg parts in B matrix
 #define sizeC (column_B*expFactor)  //size of codeword
-//int sizeC = GP_HammingEncoder->N;
- int B[row_B][column_B];
- int H[row_B][column_B][expFactor][expFactor];
- int H_2D [row_B*expFactor] [column_B*expFactor];
- int parity[expFactor];
- int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
+#define sizeMsg (expFactor*column_msg_B)
 
+int B[row_B][column_B];
+int H[row_B][column_B][expFactor][expFactor];
+int H_2D [row_B*expFactor] [column_B*expFactor];
+int parity[expFactor];
+// int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
+int newInput[sizeMsg];
 
- //variables in for loop
- int i=0;
- int j=0;
- int k=0;
- int m=0;
- int pK=0;
- int pM=0;
+//variables in for loop
+int i=0;
+int j=0;
+int k=0;
+int m=0;
+int pK=0;
+int pM=0;
 
 int syndrome(int codeword[]){
 
@@ -660,7 +655,7 @@ void shifting_p1(int n, int z, int codeword[]){
 }
 
 
-void get_parity(uint8_t *input, int codeword[]){
+void get_parity(int newInput[], int codeword[]){
 
   int m, k, i, j, r, b, q, z=expFactor, sum, bb;
   int product[]={}, prodIM[row_B*z], multiply[z], temp[z], sum_temp[z];
@@ -691,7 +686,7 @@ void get_parity(uint8_t *input, int codeword[]){
 		{
 		  //printf("%d ",m);
 		  
-		    temp[j] = input[j + m*z];
+		    temp[j] = newInput[j + m*z];
 		      
 		    multiply[j] = (temp[j] * H[k][m][i][j] );
 	     
@@ -914,7 +909,8 @@ void get_parity(uint8_t *input, int codeword[]){
 }//get_parity fx
 
 
-void initialise_codeword(uint8_t *input, int codeword[]){
+void initialise_codeword(int newInput[], int codeword[])
+{
 
   int i, j, k;
   
@@ -924,14 +920,14 @@ void initialise_codeword(uint8_t *input, int codeword[]){
       codeword[i] = 0;
     }
 
-  int sizeMsg = expFactor*column_msg_B;
+  // int sizeMsg = expFactor*column_msg_B;
   //int sizeMsg = GP_HammingEncoder->K; 
 
     //Append message or input bits to codeword array
    for (k=0; k<sizeMsg; k++) //row index of input
     {    	
       //printf("\n%d ",k);
-	  codeword[k] = input[k];
+	  codeword[k] =newInput[k];
 	  //codeword_temp[k] = input[k];
 	 
     }
@@ -1044,25 +1040,6 @@ void positive_matrix()
  	}
      }
  }
-//Print out the final H
- void print_All()
- {
-   for (k=0;k<row_B;k++)
-     {
-     for (j=0;j<expFactor;j++)
-       {
- 	for (m=0;m<column_B;m++)
- 	  {
- 	    for (i=0;i<expFactor;i++)
- 	      {
- 		printf("%d", H[k][m][j][i]);
- 	      }
- 	  }
- 	printf("\n");
-       }
-   }
- }
-
 
 // Finally when everything is in place, the module must be
 // run during the actual simulation. The code for running
@@ -1081,88 +1058,95 @@ void runGP_HammingEncoder (GP_HammingEncoderStruct *GP_HammingEncoder, signalStr
   // The type of the input vector should also be set correctly by the USER.
   N_input  = signal->N[signal->N_N-1];        // Length of the input vector
   input    = (uint8_t*) signal->x[signal->N_N-1]; // Assign pointer to the input memory
-  N_output = GP_HammingEncoder->N;                               // Length of output vector
-  output   = (uint8_t*) incrementByOneSignal(signal,N_output,0,"GP_HammingEncoder");    // Create a new output vector on end of signal list //allocating memory
+  N_output = GP_HammingEncoder->N; // Length of output vector
+  output   = (uint8_t*) incrementByOneSignal(signal,N_output,0,"GP_HammingEncoder");    // Create a new output vector on end of signal list
   
   // Computation engine :
-  // printf("\n\nIn runSwrcGP_Hamming\n\n");
-
-  //printf("\n\nin encoderrrrr\n\n"); //debug
-  //sizeC = N_output;
   int codeword[sizeC];
-
-    //Import base matrix from txt file
-    FILE* f;
-    f=fopen("NR_1_2_5.txt", "r");
-    printf("\n\nin encoderrrrr\n\n"); //debug
-    //printf("\nf: %d",f);
-    if (!feof(f))
-    {   
-        for (k=0;k<row_B;k++)
+   
+  //Import base matrix from txt file
+  FILE* f;
+  f=fopen("NR_1_2_5.txt", "r");
+  if (!feof(f))
+    {
+      for (k=0;k<row_B;k++)
         {
-            for (j=0;j<column_B;j++)
+	  for (j=0;j<column_B;j++)
             {
-                fscanf(f, "%d",&B[k][j]);
-                //printf("B[%d][%d]: %d\n", k, j, B[k][j]);
+	      fscanf(f, "%d",&B[k][j]);
+	      //printf("B[%d][%d]: %d\n", k, j, B[k][j]);
             }
         }
     }
-    fclose(f);
-    //Check whether the elements is positive, negative or zero
-   for (k=0;k<row_B;k++)
-     {
-       for (m=0;m<column_B;m++)
+  fclose(f);
+  //Check whether the elements is positive, negative or zero
+  for (k=0;k<row_B;k++)
+    {
+      for (m=0;m<column_B;m++)
         {
  	  if (B[k][m]==0)
  	    {
-            zeros_matrix();
+	      zeros_matrix();
  	    }
  	  else if (B[k][m]<0)
  	    {
-            negative_matrix();
+	      negative_matrix();
  	    }
  	  else if (B[k][m]>0)
-        {
-            //printf("B[%d][%d]=%d is positive\n", k, m, B[k][m]);
-            pK=k;
-            pM=m;
-            positive_matrix();
-            //printf("K: %d, M=%d\n", pK, pM);
+	    {
+	      //printf("B[%d][%d]=%d is positive\n", k, m, B[k][m]);
+	      pK=k;
+	      pM=m;
+	      positive_matrix();
+	      //printf("K: %d, M=%d\n", pK, pM);
  	    }
  	}
-     }
-   //print_All();               //Printing 4D parity check matrix H
-   initialise_codeword(input, codeword);
-   //print_codeword(codeword);
-   get_parity(input, codeword); //Calculate parity bits
-   convert();                   //Convert 4D H to 2D H
-   //print_codeword(codeword);
-
-   int check = syndrome(codeword);          //To check for valid codeword
-
-   if (check == 0)
-     {
-       printf("\n\nValue of check is : %d ",check);
-       printf("\n\nCodeword is Valid\n\n\n");
-     }
-   else
-     {
-        printf("\n\nValue of check is : %d ",check);
-       printf("\n\nCodeword is Invalid\n\n\n");
-     }
-
-   //Codeword=output
-   for(i=0; i<N_output; i++)
-     {
-       output[i] = codeword[i];
-     }
+    }
    
+  for (i=0;i<sizeMsg;i++)
+    {
+      newInput[i]= (int) input[i];
+    }
+  initialise_codeword(newInput, codeword);
+  //print_codeword(codeword);
+  get_parity(newInput, codeword); //Calculate parity bits
+  convert();                   //Convert 4D H to 2D H
+  // print_codeword(codeword);
+    // //write H into text file
+   FILE * file;
+   file = fopen ("H_matrix2.txt", "w+");
+   int row_H=row_B*expFactor;
+   int column_H=column_B*expFactor;
+   for (k=0;k<row_H;k++)
+     {
+       for (m=0;m<column_H;m++)
+	 {
+	   fprintf(file, "%d ", H_2D[k][m]);
+	 }
+       fprintf(file, "\n");
+     }
+   fclose(file);
+   printf("Done write\n");
+  // int check = syndrome(codeword);  
+  //To check for valid codeword
 
-  //for debugging purposes
-  // printAllSignals(signal); exit(-1);
-   
+  // if (check == 0)
+  //   {
+  //     printf("\n\nValue of check is : %d ",check);
+  //     printf("\n\nCodeword is Valid\n\n\n");
+  //   }
+  // else
+  //   {
+  //     printf("\n\nValue of check is : %d ",check);
+  //     printf("\n\nCodeword is Invalid\n\n\n");
+  //   }
 
-    
+  //Codeword=output
+  for(i=0; i<N_output; i++)
+    {
+      output[i] = (uint8_t) codeword[i];
+    }
+  
   // Save the time for the computation engine
   endTime = clock();
   GP_HammingEncoder->simTime+=(double)(endTime-beginTime)/CLOCKS_PER_SEC;

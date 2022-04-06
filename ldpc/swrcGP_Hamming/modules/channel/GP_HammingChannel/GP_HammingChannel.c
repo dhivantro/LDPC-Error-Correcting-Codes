@@ -314,9 +314,9 @@ void setParmGP_HammingChannelStruct (GP_HammingChannelStruct *GP_HammingChannel,
   // if (SWRC_readSingleArgumentFromString(arg,"R",&GP_HammingChannel->R,"%lf")==1) {
   //   printf("R=%lf\n",GP_HammingChannel->R);
   // }
-  // if (SWRC_readSingleArgumentFromString(arg,"SNR",&GP_HammingChannel->SNR,"%lf")==1) {
-  //   printf("SNR=%lf\n",GP_HammingChannel->SNR);
-  // }
+  if (SWRC_readSingleArgumentFromString(arg,"SNR",&GP_HammingChannel->SNR,"%lf")==1) {
+  printf("SNR=%lf\n",GP_HammingChannel->SNR);
+  }
   // if (SWRC_readSingleArgumentFromString(arg,"trainFlag",&GP_HammingChannel->trainFlag,"%"SCNu8"")==1) {
   //   printf("trainFlag=%"SCNu8"\n",GP_HammingChannel->trainFlag);
   // }
@@ -505,7 +505,7 @@ int trainGP_HammingChannel (GP_HammingChannelStruct *GP_HammingChannel, signalSt
 void initBerResultStructGP_HammingChannel (GP_HammingChannelStruct *GP_HammingChannel,berResultStruct *berResult) {
   //pushBerResultField(berResult,"N","int","%1d",&GP_HammingChannel->N);
   //pushBerResultField(berResult,"R","double","%1lf",&GP_HammingChannel->R);
-  //pushBerResultField(berResult,"SNR","double","%3lf",&GP_HammingChannel->SNR);
+  pushBerResultField(berResult,"SNR","double","%.1f",&GP_HammingChannel->SNR);
   //pushBerResultField(berResult,"trainFlag","uint8_t","%9"SCNu8"",&GP_HammingChannel->trainFlag);
   //pushBerResultField(berResult,"N_train","long int","%7ld",&GP_HammingChannel->N_train);
   //pushBerResultField(berResult,"i_train","long int","%7ld",&GP_HammingChannel->i_train);
@@ -528,7 +528,7 @@ void runGP_HammingChannel (GP_HammingChannelStruct *GP_HammingChannel, signalStr
   clock_t beginTime, endTime;
   int N_input,N_output;
   uint8_t *input;
-  uint8_t *output;
+  double *output;
   beginTime=clock();
   printf("In function runGP_HammingChannel\n");
   // Allocate memory for 1 more signal. The output of this function should go there.
@@ -537,21 +537,45 @@ void runGP_HammingChannel (GP_HammingChannelStruct *GP_HammingChannel, signalStr
   // The type of the input vector should also be set correctly by the USER.
   N_input  = signal->N[signal->N_N-1];        // Length of the input vector
   input    = (uint8_t*) signal->x[signal->N_N-1]; // Assign pointer to the input memory
-  N_output = GP_HammingChannel->N; //has error
-  // N_output = 7; // Length of output vector
-  output   = (uint8_t*) incrementByOneSignal(signal,N_output,0,"GP_HammingChannel");    // Create a new output vector on end of signal list
+  N_output=GP_HammingChannel->N;
+  // Length of output vector
+  output   = (double*) incrementByOneSignal(signal,N_output,6,"GP_HammingChannel");    // Create a new output vector on end of signal list
   
   // Computation engine :
 
-  //output[0]=1;
-  for(i=0; i<N_output; i++){
-    output[i]=input[i];
-    //printf("\n%d",input[i]);
-  }
-
-  //printf("\n\n\n %d \n\n\n ",  GP_HammingChannel->N);
-
-   printAllSignals(signal); exit(-1);
+  // when got AWGN noise
+  int seed= 1;
+  int base=10;
+  double pwr=GP_HammingChannel->SNR;
+  double var=1.0/(2.0*(GP_HammingChannel->R)*(pow(base, (pwr/10))));
+  double temp_input[N_input];
+  double temp_output[N_output];
+  double noise=0;
+  // printf("\ncode rate: %lf\n", GP_HammingChannel->R);
+  for (i=0;i<N_input;i++)
+    {
+      if (input[i]==1)
+      	{
+      	  temp_input[i]=-1;
+      	}
+      else
+      	{
+      	  temp_input[i]=1;
+      	}
+      
+    }
+  for (i=0;i<N_output;i++)
+    {
+      noise=sqrt(var)*SWRC_randn(&seed);
+      temp_output[i]=temp_input[i]+noise;
+      // printf("Temp input[%d]: %f\n", i, temp_input[i]);
+      // printf("Noise[%d]: %f\n", i, noise);
+      // printf("Temp output[%d]: %f\n",i,temp_output[i]);
+      output[i]=temp_output[i];
+      // printf("Final output[%d]: %lf\n",i, output[i]);
+      // printf("\n");
+    }
+  
   
   // Save the time for the computation engine
   endTime = clock();

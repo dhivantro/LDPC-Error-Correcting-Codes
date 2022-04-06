@@ -14,12 +14,12 @@
 // Set pointers to NULL (so they can be called with realloc)
 // Initialize the parameters to sane start-up values.
 void initGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder) {
-// Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
+  // Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
   GP_HammingDecoder->N                = 0;
   GP_HammingDecoder->M                = 0;
   GP_HammingDecoder->K                = 0;
   GP_HammingDecoder->R                = 0.0;
-// Fields automatically included in every module that request $args{i}
+  // Fields automatically included in every module that request $args{i}
   GP_HammingDecoder->trainFlag        = 0;
   GP_HammingDecoder->N_train          = 0;
   GP_HammingDecoder->i_train          = 0;
@@ -67,24 +67,24 @@ void printGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, c
   preString=(char*)calloc((pre+1),sizeof(char));
   for (i=0;i<pre;i++) preString[i]=' '; preString[i]='\0';
   printf("%s[--%d:%s--------\n",preString,index,name);
-// Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
-    printf("%s  int                  %s->N=%d\n",preString,name,GP_HammingDecoder->N);                 // Print int N
-    printf("%s  int                  %s->M=%d\n",preString,name,GP_HammingDecoder->M);                 // Print int M
-    printf("%s  int                  %s->K=%d\n",preString,name,GP_HammingDecoder->K);                 // Print int K
-    printf("%s  double               %s->R=%lf\n",preString,name,GP_HammingDecoder->R);                // Print double R
-// Fields automatically included in every module that request $args{i}
-    printf("%s  uint8_t              %s->trainFlag=%"SCNu8"\n",preString,name,GP_HammingDecoder->trainFlag); // Print uint8_t trainFlag
-    printf("%s  long int             %s->N_train=%ld\n",preString,name,GP_HammingDecoder->N_train);    // Print long int N_train
-    printf("%s  long int             %s->i_train=%ld\n",preString,name,GP_HammingDecoder->i_train);    // Print long int i_train
-    printf("%s  long unsigned int    %s->numberOfMult=%lu\n",preString,name,GP_HammingDecoder->numberOfMult); // Print long unsigned int numberOfMult
-    printf("%s  double               %s->aveNoOfMultPerFrame=%lf\n",preString,name,GP_HammingDecoder->aveNoOfMultPerFrame); // Print double aveNoOfMultPerFrame
-    printf("%s  long unsigned int    %s->numberOfAdd=%lu\n",preString,name,GP_HammingDecoder->numberOfAdd); // Print long unsigned int numberOfAdd
-    printf("%s  double               %s->aveNoOfAddPerFrame=%lf\n",preString,name,GP_HammingDecoder->aveNoOfAddPerFrame); // Print double aveNoOfAddPerFrame
-    printf("%s  long unsigned int    %s->numberOfComp=%lu\n",preString,name,GP_HammingDecoder->numberOfComp); // Print long unsigned int numberOfComp
-    printf("%s  double               %s->aveNoOfCompPerFrame=%lf\n",preString,name,GP_HammingDecoder->aveNoOfCompPerFrame); // Print double aveNoOfCompPerFrame
-    printf("%s  double               %s->simTime=%lf\n",preString,name,GP_HammingDecoder->simTime);    // Print double simTime
-    printf("%s  double               %s->aveSimTimePerFrame=%lf\n",preString,name,GP_HammingDecoder->aveSimTimePerFrame); // Print double aveSimTimePerFrame
-    printf("%s  long unsigned int    %s->numberOfCalls=%lu\n",preString,name,GP_HammingDecoder->numberOfCalls); // Print long unsigned int numberOfCalls
+  // Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
+  printf("%s  int                  %s->N=%d\n",preString,name,GP_HammingDecoder->N);                 // Print int N
+  printf("%s  int                  %s->M=%d\n",preString,name,GP_HammingDecoder->M);                 // Print int M
+  printf("%s  int                  %s->K=%d\n",preString,name,GP_HammingDecoder->K);                 // Print int K
+  printf("%s  double               %s->R=%lf\n",preString,name,GP_HammingDecoder->R);                // Print double R
+  // Fields automatically included in every module that request $args{i}
+  printf("%s  uint8_t              %s->trainFlag=%"SCNu8"\n",preString,name,GP_HammingDecoder->trainFlag); // Print uint8_t trainFlag
+  printf("%s  long int             %s->N_train=%ld\n",preString,name,GP_HammingDecoder->N_train);    // Print long int N_train
+  printf("%s  long int             %s->i_train=%ld\n",preString,name,GP_HammingDecoder->i_train);    // Print long int i_train
+  printf("%s  long unsigned int    %s->numberOfMult=%lu\n",preString,name,GP_HammingDecoder->numberOfMult); // Print long unsigned int numberOfMult
+  printf("%s  double               %s->aveNoOfMultPerFrame=%lf\n",preString,name,GP_HammingDecoder->aveNoOfMultPerFrame); // Print double aveNoOfMultPerFrame
+  printf("%s  long unsigned int    %s->numberOfAdd=%lu\n",preString,name,GP_HammingDecoder->numberOfAdd); // Print long unsigned int numberOfAdd
+  printf("%s  double               %s->aveNoOfAddPerFrame=%lf\n",preString,name,GP_HammingDecoder->aveNoOfAddPerFrame); // Print double aveNoOfAddPerFrame
+  printf("%s  long unsigned int    %s->numberOfComp=%lu\n",preString,name,GP_HammingDecoder->numberOfComp); // Print long unsigned int numberOfComp
+  printf("%s  double               %s->aveNoOfCompPerFrame=%lf\n",preString,name,GP_HammingDecoder->aveNoOfCompPerFrame); // Print double aveNoOfCompPerFrame
+  printf("%s  double               %s->simTime=%lf\n",preString,name,GP_HammingDecoder->simTime);    // Print double simTime
+  printf("%s  double               %s->aveSimTimePerFrame=%lf\n",preString,name,GP_HammingDecoder->aveSimTimePerFrame); // Print double aveSimTimePerFrame
+  printf("%s  long unsigned int    %s->numberOfCalls=%lu\n",preString,name,GP_HammingDecoder->numberOfCalls); // Print long unsigned int numberOfCalls
   printf("%s---%d:%s-------]\n",preString,index,name);
   free(preString);
 }
@@ -159,7 +159,7 @@ void allocateDoubleArrayGP_HammingDecoderStruct (doubleArrayGP_HammingDecoderStr
   GP_HammingDecoder->x=(GP_HammingDecoderStruct**)realloc(GP_HammingDecoder->x,N*sizeof(GP_HammingDecoderStruct*));
   for (i=0;i<GP_HammingDecoder->N_N_x;i++) {
     GP_HammingDecoder->x[i]=(GP_HammingDecoderStruct*)calloc(M,sizeof(GP_HammingDecoderStruct));
-  for(j=0;j<GP_HammingDecoder->N_x[i];j++) initGP_HammingDecoderStruct(&GP_HammingDecoder->x[i][j]);
+    for(j=0;j<GP_HammingDecoder->N_x[i];j++) initGP_HammingDecoderStruct(&GP_HammingDecoder->x[i][j]);
   }
 }
 
@@ -190,7 +190,7 @@ void plotGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, co
 // functions. This function packs struct data into a uint_8_vector
 void packGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, uint8_vector *cfgFile) {
   int i;
- //Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
+  //Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
   // Pack int N
   SWRC_packToUint8((uint8_t*)&GP_HammingDecoder->N,1,sizeof(int),cfgFile);
   // Pack int M
@@ -199,7 +199,7 @@ void packGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, ui
   SWRC_packToUint8((uint8_t*)&GP_HammingDecoder->K,1,sizeof(int),cfgFile);
   // Pack double R
   SWRC_packToUint8((uint8_t*)&GP_HammingDecoder->R,1,sizeof(double),cfgFile);
- //Fields automatically included in every module that request $args{i}
+  //Fields automatically included in every module that request $args{i}
   // Pack uint8_t trainFlag
   SWRC_packToUint8((uint8_t*)&GP_HammingDecoder->trainFlag,1,sizeof(uint8_t),cfgFile);
   // Pack long int N_train
@@ -231,7 +231,7 @@ void packGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, ui
 void unpackGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, uint8_vector *cfgFile) {
   int i;
   freeGP_HammingDecoderStruct(GP_HammingDecoder);
-// Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
+  // Fields entered by the user during module creation (saved to .cfg file, and initialized by init routine)
   // Unpack int N
   SWRC_unpackFromUint8((uint8_t*)&GP_HammingDecoder->N,1,sizeof(int),cfgFile);
   // Unpack int M
@@ -240,7 +240,7 @@ void unpackGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, 
   SWRC_unpackFromUint8((uint8_t*)&GP_HammingDecoder->K,1,sizeof(int),cfgFile);
   // Unpack double R
   SWRC_unpackFromUint8((uint8_t*)&GP_HammingDecoder->R,1,sizeof(double),cfgFile);
-// Fields automatically included in every module that request $args{i}
+  // Fields automatically included in every module that request $args{i}
   // Unpack uint8_t trainFlag
   SWRC_unpackFromUint8((uint8_t*)&GP_HammingDecoder->trainFlag,1,sizeof(uint8_t),cfgFile);
   // Unpack long int N_train
@@ -316,15 +316,15 @@ void saveGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, ch
 void setParmGP_HammingDecoderStruct (GP_HammingDecoderStruct *GP_HammingDecoder, char *arg) {
   int i;
   SWRC_removeSpaces(arg);
-   if (SWRC_readSingleArgumentFromString(arg,"N",&GP_HammingDecoder->N,"%d")==1) {
-     printf("N=%d\n",GP_HammingDecoder->N);
-   }
+  if (SWRC_readSingleArgumentFromString(arg,"N",&GP_HammingDecoder->N,"%d")==1) {
+    printf("N=%d\n",GP_HammingDecoder->N);
+  }
   // if (SWRC_readSingleArgumentFromString(arg,"M",&GP_HammingDecoder->M,"%d")==1) {
   //   printf("M=%d\n",GP_HammingDecoder->M);
   // }
-   if (SWRC_readSingleArgumentFromString(arg,"K",&GP_HammingDecoder->K,"%d")==1) {
-     printf("K=%d\n",GP_HammingDecoder->K);
-   }
+  // if (SWRC_readSingleArgumentFromString(arg,"K",&GP_HammingDecoder->K,"%d")==1) {
+  //   printf("K=%d\n",GP_HammingDecoder->K);
+  // }
   // if (SWRC_readSingleArgumentFromString(arg,"R",&GP_HammingDecoder->R,"%lf")==1) {
   //   printf("R=%lf\n",GP_HammingDecoder->R);
   // }
@@ -379,43 +379,43 @@ void processCommandGP_HammingDecoder (GP_HammingDecoderStruct *GP_HammingDecoder
   printf("processCommandGP_HammingDecoder:%s\n",command);
   for(i=0;i<400 && i<strlen(command);) {
     if (SWRC_matchCommand(command,"load",&i,commandParameter,400)==1) {
-	loadGP_HammingDecoderStruct(GP_HammingDecoder,commandParameter);
-	continue;
+      loadGP_HammingDecoderStruct(GP_HammingDecoder,commandParameter);
+      continue;
     }
 
     if (SWRC_matchCommand(command,"print",&i,commandParameter,400)==1) {
-	printGP_HammingDecoderStruct(GP_HammingDecoder,"GP_HammingDecoder",0,0);
-	continue;
+      printGP_HammingDecoderStruct(GP_HammingDecoder,"GP_HammingDecoder",0,0);
+      continue;
     }
 
     if (SWRC_matchCommand(command,"setParm",&i,commandParameter,400)==1) {
-	setParmGP_HammingDecoderStruct(GP_HammingDecoder,commandParameter);
-	continue;
+      setParmGP_HammingDecoderStruct(GP_HammingDecoder,commandParameter);
+      continue;
     }
 
     if (SWRC_matchCommand(command,"checkParm",&i,commandParameter,400)==1) {
-	checkParametersGP_HammingDecoder(GP_HammingDecoder);
-	continue;
+      checkParametersGP_HammingDecoder(GP_HammingDecoder);
+      continue;
     }
 
     if (SWRC_matchCommand(command,"precomp",&i,commandParameter,400)==1) {
-	precompGP_HammingDecoder(GP_HammingDecoder);
-	continue;
+      precompGP_HammingDecoder(GP_HammingDecoder);
+      continue;
     }
 
     if (SWRC_matchCommand(command,"postcomp",&i,commandParameter,400)==1) {
-	postcompGP_HammingDecoder(GP_HammingDecoder,0);
-	continue;
+      postcompGP_HammingDecoder(GP_HammingDecoder,0);
+      continue;
     }
 
     if (SWRC_matchCommand(command,"help",&i,commandParameter,400)==1) {
-	helpCommandGP_HammingDecoder(0);
-	continue;
+      helpCommandGP_HammingDecoder(0);
+      continue;
     }
 
     if (SWRC_matchCommand(command,"run",&i,commandParameter,400)==1) {
-	runGP_HammingDecoder(GP_HammingDecoder, signal);
-	continue;
+      runGP_HammingDecoder(GP_HammingDecoder, signal);
+      continue;
     }
 
     printf("processCommandGP_HammingDecoder: Unknown command:%s\n",&command[i]);
@@ -533,14 +533,53 @@ void initBerResultStructGP_HammingDecoder (GP_HammingDecoderStruct *GP_HammingDe
   //pushBerResultField(berResult,"numberOfCalls","long unsigned int","%13lu",&GP_HammingDecoder->numberOfCalls);
 }
 
+#include <stdlib.h>
+#include <stdint.h> //for uint8_t
+#include <limits.h> // For INT_MAX in row operation
+
+#define row_H 230
+#define column_H 340
+#define row_L row_H
+#define column_L column_H
+#define r_size 340
+
+//dhiva's part
+int H[row_H][column_H];
+double new_Input[r_size];
+double L[row_L][column_L];
+double temp[row_L][column_L];
+double Lnew[row_L][column_L];
+double sign[row_L][column_L];
+//jw's part
+double sum[r_size];
+double sum_L[r_size];
+double new_L[row_L][r_size];
+int newSum[r_size];
+int Output[r_size];
+
+int i, j, k;
+
+//declare functions
+void L_initial();//Initialisation
+void L_row_operation();//Row operation
+void row_operation();//find min1 and min2
+void Adjust_Row_Element(double first, double second, int index);
+void get_parity_L();//count and see parity of each row
+void update_parity_L(float n, int i);//update the signs of numbers in each row 
+void update_L_matrix();//update final output
+void print_L_matrix();//print final output
+void L_column_operation();//Column operation
+void L_final();//Final Decision
+int syndrome();//Syndrome Check
+
 // Finally when everything is in place, the module must be
 // run during the actual simulation. The code for running
 // the module is in this function.
 void runGP_HammingDecoder (GP_HammingDecoderStruct *GP_HammingDecoder, signalStruct *signal) {
-  int i,c,c1,c2,c3;
   clock_t beginTime, endTime;
   int N_input,N_output;
-  uint8_t *input;
+
+  double *input;
   uint8_t *output;
   beginTime=clock();
   printf("In function runGP_HammingDecoder\n");
@@ -549,41 +588,440 @@ void runGP_HammingDecoder (GP_HammingDecoderStruct *GP_HammingDecoder, signalStr
   // the output vector 0=uint8_t, 1=char, 2=int, 3=unsigned int, 4=long unsigned int, 5=float, 6=double
   // The type of the input vector should also be set correctly by the USER.
   N_input  = signal->N[signal->N_N-1];        // Length of the input vector
-  input    = (uint8_t*) signal->x[signal->N_N-1]; // Assign pointer to the input memory
-  N_output = GP_HammingDecoder->N;                               // Length of output vector
+  input    = (double*) signal->x[signal->N_N-1]; // Assign pointer to the input memory
+  N_output = 110; //length of output vector
   output   = (uint8_t*) incrementByOneSignal(signal,N_output,0,"GP_HammingDecoder");    // Create a new output vector on end of signal list
-  
+
+  //Function for decoding process
+ 
   // Computation engine :
-
-   //for debugging purposes
+  // printf("Input: \n");
+  for (j=0;j<r_size;j++)
+    {
+      new_Input[j]=  input[j];
+      //printf("%f\n", new_Input[j]);
+    }
   
+  FILE* f;
+  f=fopen("H_matrix.txt", "r");
+  if (!feof(f))
+    {
+      for (k=0;k<row_H;k++)
+        {
+	  for (j=0;j<column_H;j++)
+            {
+	      fscanf(f, "%d",&H[k][j]);
+	      // printf("H[%d][%d]: %d\n", k, j, H[k][j]);
+            }
+	  // printf("\n");
+        }
+    }
+  fclose(f);
+  
+  int i, j, k;
 
-  // printf("\n\n %d \n\n",input[5]);
+  int size;
+
+  //Initialise L as sparse matrix (all zeros)
+  for (i=0; i<row_L; i++)
+    {
+      for (j=0; j<column_L; j++)
+	{
+	  L[i][j]=0;
+	}
+    }
+  //Print L
+  for (i=0; i<row_L; i++)
+    {
+      for (j=0; j<column_L; j++)
+	{
+	  //printf("%f ", L[i][j]);
+	}
+      //printf("\n");
+    }
    
-  c1=input[4]^input[0]^input[1]^input[2];
-  c2=input[5]^input[0]^input[2]^input[3];
-  c3=input[6]^input[0]^input[1]^input[3];
-
-  c=c3*4 + c2*2 +c1; //finding the error position i think
-
-  if(c1==0){
-    printf("\n\n\n NO ERROR \n\n\n");
-  }
-
-  for (i=0; i<N_output; i++){
-    
-    //output[i]=input[i];
-  }
-  
-  //for debugging
-  printAllSignals(signal); exit(-1);
-  
-   
-  
+  L_initial(); //initialisation
+  L_row_operation();//row operation
+  //print_L_matrix();
+  //print output from row operation (which is also old L in column operation)
+  L_column_operation();//column operation  
+  L_final();//final decision
+  //output=final decision
+  for (j=0;j<110;j++)
+    {
+      if (sum[j]==1)
+      	{
+      	  output[j]=1;
+      	}
+      else
+      	{
+      	  output[j]=0;
+      	}
+      // output[j]= (uint8_t) sum[j];
+    }
   // Save the time for the computation engine
   endTime = clock();
   GP_HammingDecoder->simTime+=(double)(endTime-beginTime)/CLOCKS_PER_SEC;
   GP_HammingDecoder->numberOfCalls++;
 }
+
+void L_initial(){
+  int i, j ,k;
+
+  //This part gets H 
+  //Dynamically allocate L, make L size=H size
+  //input col[1] = L 1st col(wherever non zero)
+  //if(L[i][1]==1): L[i][j]=input[j]
+
+  for(i=0; i<column_L; i++)
+    {
+      for(j=0; j<row_L; j++)
+	{
+	  if (H[j][i] == 0)
+	    {
+	      L[j][i] = 0;//remain position of 0s on H
+	    }
+	  else
+	    {
+	      L[j][i] = new_Input[i];
+	    }
+	   
+	}
+    }
+  //print output of initialisation
+  // printf("\n-------Initialisation-------\n\n");
+   for (i=0; i<row_L; i++)
+     {
+       for (j=0; j<column_L; j++)
+   	{
+	  // printf("%f ", L[i][j]);
+   	}
+       // printf("\n");
+     }
+}
+
+void L_row_operation(){
+
+  row_operation(); //Get magnitude
+  get_parity_L(); //Get the sign first
+  update_L_matrix(); //Updating magnitude with sign
+}
+
+void row_operation()
+{
+
+  int i, j, k;
+  double first, second;
+
+  first = second = INT_MAX;
+
+  // reset negative sign
+  for(i=0; i<row_L; i++)
+    {
+      for(j=0; j<column_L; j++)
+  	{
+	  if (L[i][j] < 0)
+  	    {
+  	      temp[i][j] = L[i][j]*(-1);
+  	    }
+
+	  else
+	    {
+	      temp[i][j] = L[i][j];
+	    }
+  	}
+    }
+
+  // printf("\n-------L after resetting the signs-------\n\n");
+   for(i=0; i<row_L; i++)
+     {
+       for(j=0; j<column_L; j++)
+   	{
+	   
+	  //  printf("%f ",temp[i][j]);
+	    
+   	}
+       // printf("\n");
+     }
+    
+  //Row Operation Starts
+  //printf("\n-------Row Operation-------");
+  for(i=0; i<row_L; i++)
+    {
+      for(j=0; j<column_L; j++)
+	{
+	  //if (H[i][j] == 0.0){
+	     //first=0.0;
+	     // second=0.0;
+	  // }
+	  //printf("\n H[%d][%d]: %d",i,j, H[i][j]);
+	    if (H[i][j] != 0.0){
+	     
+	     
+	   if (temp[i][j] < first )
+	    {
+	      //If current element smaller than first, update first and second
+	      second = first;
+	      //printf("\n sec: %f ",second);
+	      first = temp[i][j]; //update first to current element
+	      //printf("\n hfiueruifecond");
+	      //printf("\nj:%d first: %f",j,first);
+	      //printf("\nj:%d sec: %f",j,second);
+	      
+	    }//1
+	  
+	  else if (temp[i][j] < second && temp[i][j] != first )
+	    {	     
+	      //if current element in between first and second
+	    
+		second = temp[i][j];
+
+	      //printf("\n col [%d][%d]   %f     %f",i,j,first,second);
+	      //printf("\nsec: %f",second);
+		//printf("\nj:%d sec: %f fir:%f",j,second,first);
+		  
+	    }//2
+
+	  else if (temp[i][j] == first && second == INT_MAX )
+	    {
+	      second = first;
+	      //printf("\nj:%d first: %f",j,first);
+	      //printf("\nj:%d sec: %f",j,second);
+	      //first = temp[i][j];
+	    }//3
+
+	  else if (temp[i][j] < first && L[i][j]!=0.0 )
+	    {
+	      second = temp[i][j];
+	      //printf("\nj:%d sec: %f",j,second);
+	    }//4
+
+	  else if (temp[i][j] < second && L[i][j]!= 0.0)
+	    {
+	      second = temp[i][j];
+	      //printf("\nj:%d sec: %f",j,second);
+	    }
+	   
+	  }//if H!=0	 
+	  
+	}
+      // if(first == INT_MAX && second == INT_MAX)
+      // 	{
+      // 	  first = 0.0;
+      // 	  second= 0.0;
+      // 	}
+       // printf("\n\nRow %d: smallest: %f \t2nd smallest: %f ",i,first,second);
+      Adjust_Row_Element(first, second, i);
+      first = second = INT_MAX; //reset values
+      //printf("\n col [%d][%d]   %f     %f",i,j,first,second);
+    }
+}
+
+void Adjust_Row_Element(double first, double second, int index){
+
+  int start = 0; //1st non zero position in L
+  
+  // printf("\n f: %f  s: %f ",first, second);
+   
+  for(j=0; j<column_L; j++)
+    {
+      if (L[index][j] == 0)
+	{
+	  //j++;
+	}
+
+      else if (start == 0)
+	{
+	  Lnew[index][j] = second;
+	  start = 1; //update
+	}
+      else if (start != 0)
+	{
+	  Lnew[index][j] = first;
+	  start = 1; //update
+	}
+    }
+}
+
+void get_parity_L(){
+
+  float n = 1;
+  int x = 1;
+
+  for(i=0; i<row_L; i++)
+    {
+      for(j=0; j<column_L; j++)
+	{
+	  if(L[i][j] != 0.0)
+	    {	      	      
+	      n = n * L[i][j];
+	    }
+	}     
+      
+      update_parity_L(n, i);
+      n = 1; //reset n
+    }
+
+}
+  
+void update_parity_L(float n, int i){
+
+  for(j=0; j<column_L; j++)
+    {
+      if(L[i][j]<0 && n>0) //if element of L is negative, 
+	{
+	  Lnew[i][j] = Lnew[i][j] * -1;
+	}
+      else if (L[i][j]>0 && n<0)
+	{
+	  Lnew[i][j] = Lnew[i][j] * -1;
+	}
+      //printf("L[%d][%d]: %f ",i,j,L[i][j]);
+    }
+  // printf("\n");
+  // printf("\n n: %f",n);
+}
+
+void update_L_matrix(){
+
+  //printf("\n\n\n------Updating L Matrix ----------- \n \n");
+
+  for(i=0; i<row_L; i++)
+    {
+      for(j=0; j<column_L; j++)
+	{	   
+	  L[i][j] = Lnew[i][j];
+	}
+    }
+}
+  
+void print_L_matrix(){
+
+  printf("\n\n-------Printing Updated L Matrix------- \n \n");
+
+  for(i=0; i<row_L; i++)
+    {
+      for(j=0; j<column_L; j++)
+	{
+	  // if (j==339)
+	  //   {
+	  //     printf("L[%d][%d]=%lf\n", i, j, L[i][j]);
+	  //   }
+	  // printf("%f ",L[i][j]);
+	}
+      // printf("\n");
+    }
+}
+
+void L_column_operation()
+{
+  printf("\n-------Sum L of each column-------\n\n");
+  //sum up all the elements of same column in L
+  for(j=0;j<r_size;j++)
+    {
+      for(i=0;i<row_L;i++)
+      	{
+	  sum_L[j]+=L[i][j];
+	}
+      // if (j==339)
+      // 	{
+      // 	  printf("sum_L[%d]: %lf\n", j, sum_L[j]);
+      // 	}
+    }
+  //sum up the elements of same column of r and L
+  printf("\n-------Sum of each column-------\n\n");
+  for (j=0;j<r_size;j++)
+    {
+      sum[j]=new_Input[j]+sum_L[j];
+      sum_L[j]=0.0;
+      // printf("sum[%d]: %lf\n",j, sum[j]);
+    }
+  //create new L
+  //printf("\n-------New L-------\n\n");
+  // j=0;
+
+  for (i=0;i<row_L;i++)
+    {
+      for(j=0;j<r_size;j++)
+	{
+	  if (L[i][j]!=0)
+	    {
+	      new_L[i][j]=sum[j]-L[i][j];
+	    }
+	  // printf("%lf", new_L[i][j]);
+	}
+      // printf("\n");
+    }
+}
+void L_final()
+{
+  //final decision
+  printf("\n-------Final Decision-------\n\n");
+  for (j=0;j<r_size;j++)
+    {
+      if (sum[j]>0)
+	{
+	  sum[j]=0;
+	}
+      else if (sum[j]<0)
+	{
+	  sum[j]=1;
+	}
+      // printf("%f\n", sum[j]);
+    }
+}
+
+// int syndrome()
+// {
+//   //This section calculates the syndrome to check validity of final codeword
+//   //If syndrome is 0, it is a valid codeword
+//   //If syndrome is 1, it is an invalid codeword
+
+//   // int column_H = column_B * expFactor;
+//   // int row_H = row_B * expFactor;
+
+//   int multiply[column_H], sum_temp[]={};
+//   int synd[row_H];
+//   int s;
+
+//   for (i=0; i<row_H; i++)
+//     {
+//       for (j=0; j<column_H; j++)
+// 	{
+// 	  multiply[j] = H[i][j] * sum[j];
+	 	  
+// 	  //printf("\ni: %d ",i);
+// 	}
+//       //printf("\n\n");
+//       s= 0;
+
+//       for (k=0; k<column_H; k++)
+// 	{
+// 	  s = s + multiply[k]; //Updating
+// 	}
+
+//       synd[i] = s%2;   //perform modulo 2
+//       //printf("\n%d",synd[i]%2); 
+//       // if (synd[i] != 0)
+//       //	{
+//       //	  //printf("\n\n Invalid Codeword \n\n");
+//       //	}
+//       // else
+//       //{
+//       //  //printf("\n\n Valid Codeword \n\n");
+//       //}
+    
+//     }
+//   int ss=0;
+//   for(i=0; i<row_H; i++)
+//     {
+//       ss+=synd[i];
+//     }
+
+//   // printf("\n\n%d ",ss);
+//   return ss;
+// }
+
+
 
 
