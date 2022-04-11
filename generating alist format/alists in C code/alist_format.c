@@ -227,7 +227,7 @@ void alist2pchk(){
    for (i=0; i<rowH; i++)
      {
        fscanf(f, "%d",&numbers_row[i]);
-       //printf("\n%d ",numbers[i]);
+       //printf("\n%d ",numbers_row[i]);
      }
 
    //For rows in alist
@@ -273,7 +273,6 @@ void alist2pchk(){
 	      
 	  }
       }
-
    
    
 
@@ -282,7 +281,9 @@ void alist2pchk(){
 	for (j=0; j<numbers_row[i]; j++)
 	  {
 	    //printf("%d ",position[i][j]);
-	    H [i] [(position[i][j])]=1;
+	    
+	    H [i][(position[i][j])-1]=1;
+	    //printf(" %d",(position[i][j]));
 	    	    	      
 	  }
 	//printf("\n");
@@ -296,7 +297,7 @@ void alist2pchk(){
 	for (j=0; j<columnH; j++)
 	  {
 	    
-	    printf("%d", H[i][j]);
+	    printf("%d ", H[i][j]);
 	    fprintf(p,"%d ", H [i][j]);
 	      
 	  }
