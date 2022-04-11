@@ -9,6 +9,7 @@
 
  int B[row_B][column_B];
  int H[row_B][column_B][expFactor][expFactor];
+int H_4D[row_B][column_B][expFactor][expFactor];
  int H_2D [row_B*expFactor] [column_B*expFactor];
  int parity[expFactor];
  int sizeMsg = expFactor*column_msg_B; //Get from make file ->N
@@ -409,7 +410,38 @@ void initialise_codeword(int input[], int codeword[]){
   
 }
 
-void convert(){
+void convert_to_4d(){
+
+  int k, m, i ,j;
+
+   //printf("\n\n-----------------------------------------\n\n");
+   //printf("            Converting 2D H to 4D H            ");
+   //printf("\n\n-----------------------------------------\n\n");
+   
+   for (k=0; k<row_B; k++)  //row B
+    {
+      for (i=0; i<expFactor; i++)
+	{
+	  for (m=0; m<column_B; m++) //column B
+	    {
+	      for (j=0; j<expFactor; j++)
+		{
+		  H_4D[k][m][i][j] =  H_2D[((expFactor-1)*k)+k+i][((expFactor-1)*m)+m+j];
+		  printf(" %d ",H_4D[k][m][i][j] );
+		}
+	    }
+	}
+      printf("\n");
+    }
+   //printf("\n\n");
+
+ 
+
+  printf("\n\n\n Finish converting to 4D H  \n\n\n");
+
+}
+
+void convert_to_2d(){
 
   int k, m, i ,j;
 
@@ -588,18 +620,34 @@ void positive_matrix()
  	    }
  	}
      }
+
+   int H_temp;
+   
+   //convert_to_2d();                   //Convert 4D H to 2D H
    //print_All();               //Printing 4D parity check matrix H
-   initialise_codeword(input, codeword);
+   //initialise_codeword(input, codeword);
    //print_codeword(codeword);
-   get_parity(input, codeword); //Calculate parity bits
-   convert();                   //Convert 4D H to 2D H
+   //convert_to_2d();                   //Convert 4D H to 2D H
+   //convert_to_4d();                   //Convert 2D H to 4D H
+   //print_All();               //Printing 4D parity check matrix H
+   
+   //get_parity(input, codeword); //Calculate parity bits
+   convert_to_2d();                   //Convert 4D H to 2D H
+   convert_to_4d();                   //Convert 2D H to 4D H
+   //print_codeword(codeword);
 
-   int check = syndrome(codeword);          //To check for valid codeword
+   //int check = syndrome(codeword);          //To check for valid codeword
 
-   if (check == 0)
-     {printf("\nValid codeword\n\n");}
-   else
-     {printf("\nInvalid codeword\n\n");}
+   // if (check == 0)
+     {
+       // printf("\n\nValue of check is : %d ",check);
+       //printf("\n\nCodeword is Valid\n\n\n");
+     }
+     // else
+     {
+       //printf("\n\nValue of check is : %d ",check);
+       //printf("\n\nCodeword is Invalid\n\n\n");
+     }
 
    
  }
